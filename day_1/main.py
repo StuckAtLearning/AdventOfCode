@@ -18,4 +18,7 @@ if __name__ == '__main__':
     print(way_too_much_food)
     print(all_the_food)
 
+    # Answer for Part 1: 69206
+    # Answer for Part 2: 197400
+
 
