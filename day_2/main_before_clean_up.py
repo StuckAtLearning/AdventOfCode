@@ -5,9 +5,9 @@ def follow_strategy_score(strategy_file_path):
     # A = Rock = 1 = X = LOSE
     # B = Paper = 2 = Y = DRAW
     # C = Scissor = 3 = Z = WIN
-    strategy_list = RFF.read_file_with_new_line(strategy_file_path)
+    # strategy_list = (1 if i == "A" else 2 if i == "B" else 3, 1 if j == "X" else 2 if j == "Y" else 3) for
 
-    scores = {'A': 1, 'B': 2, 'C': 3, 'X': 1}
+    strategy_list = RFF.read_file_with_new_line(strategy_file_path)
 
     strategy_score_list = list()
     for game in strategy_list:
@@ -44,8 +44,6 @@ def follow_strategy_score(strategy_file_path):
         your_total_score += you
 
     return your_total_score
-
-    # strategy_list = (1 if i == "A" else 2 if i == "B" else 3, 1 if j == "X" else 2 if j == "Y" else 3) for
 
 
 def the_real_strategy(strategy_file_path):
@@ -91,11 +89,9 @@ def the_real_strategy(strategy_file_path):
                 your_total_score += 2
 
         your_total_score += you + opponent
-
     return your_total_score
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     final_score = follow_strategy_score("encrypted_strategy_guide.txt")
     print(final_score)
