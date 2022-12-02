@@ -98,3 +98,6 @@ if __name__ == '__main__':
 
     real_game = the_real_strategy("encrypted_strategy_guide.txt")
     print(real_game)
+
+    # 1st Part Answer: 9241
+    # 2nd Part Answer: 14610
