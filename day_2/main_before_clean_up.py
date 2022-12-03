@@ -2,14 +2,14 @@ import ReadFileFunctions as RFF
 
 
 def follow_strategy_score(strategy_file_path):
-    # A = Rock = 1 = X = LOSE
-    # B = Paper = 2 = Y = DRAW
-    # C = Scissor = 3 = Z = WIN
-    # strategy_list = (1 if i == "A" else 2 if i == "B" else 3, 1 if j == "X" else 2 if j == "Y" else 3) for
-
+    # A = Rock = 1 = X
+    # B = Paper = 2 = Y
+    # C = Scissor = 3 = Z
     strategy_list = RFF.read_file_with_new_line(strategy_file_path)
 
     strategy_score_list = list()
+    # assign each letter to its corresponding points
+    # stored in a list of tuples
     for game in strategy_list:
         opponent_choice = game[0]
         self_choice = game[2]
@@ -33,15 +33,21 @@ def follow_strategy_score(strategy_file_path):
 
     your_total_score = 0
     for opponent, you in strategy_score_list:
+        # calculate the score by always adding your choice points
+        your_total_score += you
+        # then determine and add the outcome point:
+        # Rock-Paper or Paper-Scissor combo
         if abs(you - opponent) == 1:
             if you > opponent:
                 your_total_score += 6
-        elif abs(you - opponent) == 0:
+        # Draw
+        elif you == opponent:
             your_total_score += 3
+        # Rock-Scissor combo
         else:
             if you < opponent:
                 your_total_score += 6
-        your_total_score += you
+        # You always win your choice points
 
     return your_total_score
 
@@ -53,6 +59,8 @@ def the_real_strategy(strategy_file_path):
     strategy_list = RFF.read_file_with_new_line(strategy_file_path)
 
     strategy_score_list = list()
+    # similar as above
+    # except XYZ will be assigned to the outcome points instead of choice points
     for game in strategy_list:
         opponent_choice = game[0]
         self_choice = game[2]
@@ -76,19 +84,33 @@ def the_real_strategy(strategy_file_path):
 
     your_total_score = 0
     for opponent, you in strategy_score_list:
+        # a little different from Part 1
+        # calculate the points by always adding your outcome points and opponent's point
+        your_total_score += you + opponent
+        # then determine what choice you need to make to WIN/DRAW/LOSE
+        # and then add the difference between that choice points and your opponent's choice points
+        # you need to win
         if you == 6:
+            # opponent chooses Rock or Paper
             if opponent < 3:
+                # you need choose Paper or Scissor, which would be one point more than your opponent's choice points
                 your_total_score += 1
+            # opponent chooses Scissors
             else:
+                # you need to choose Rock which is two points less than your opponent's choice points
                 your_total_score -= 2
 
+        # you need to lose
         elif you == 0:
+            # opponent chooses Paper or Scissors
             if opponent > 1:
+                # you need to choose Rock or Paper
                 your_total_score -= 1
+            # opponent chooses Rock
             else:
+                # you need to choose Scissors
                 your_total_score += 2
 
-        your_total_score += you + opponent
     return your_total_score
 
 
