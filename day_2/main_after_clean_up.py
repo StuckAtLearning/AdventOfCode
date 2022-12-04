@@ -1,7 +1,7 @@
 import ReadFileFunctions as RFF
 
 
-def follow_strategy_score(strategy_file_path):
+def follow_strategy_score(strategy_file_path: str) -> int:
     # A = Rock = 1 = X = LOSE
     # B = Paper = 2 = Y = DRAW
     # C = Scissor = 3 = Z = WIN
@@ -33,7 +33,7 @@ def follow_strategy_score(strategy_file_path):
     return your_total_score
 
 
-def the_real_strategy(strategy_file_path):
+def the_real_strategy(strategy_file_path: str) -> int:
     # A = Rock = 1 = X = LOSE
     # B = Paper = 2 = Y = DRAW
     # C = Scissor = 3 = Z = WIN
@@ -62,29 +62,27 @@ def the_real_strategy(strategy_file_path):
         strategy_score_list.append(points)
 
     your_total_score = sum([i + j for i, j in strategy_score_list])
-    # thinking about doing some % here but haven't figured out a simple way to do it yet
+    for opponent, you in strategy_score_list:
+        if you == 6:
+            # opponent chooses Rock or Paper
+            if opponent < 3:
+                # you need choose Paper or Scissor, which would be one point more than your opponent's choice points
+                your_total_score += 1
+            # opponent chooses Scissors
+            else:
+                # you need to choose Rock which is two points less than your opponent's choice points
+                your_total_score -= 2
 
-    # for opponent, you in strategy_score_list:
-    #     if you == 6:
-    #         # opponent chooses Rock or Paper
-    #         if opponent < 3:
-    #             # you need choose Paper or Scissor, which would be one point more than your opponent's choice points
-    #             your_total_score += 1
-    #         # opponent chooses Scissors
-    #         else:
-    #             # you need to choose Rock which is two points less than your opponent's choice points
-    #             your_total_score -= 2
-    #
-    #     # you need to lose
-    #     elif you == 0:
-    #         # opponent chooses Paper or Scissors
-    #         if opponent > 1:
-    #             # you need to choose Rock or Paper
-    #             your_total_score -= 1
-    #         # opponent chooses Rock
-    #         else:
-    #             # you need to choose Scissors
-    #             your_total_score += 2
+        # you need to lose
+        elif you == 0:
+            # opponent chooses Paper or Scissors
+            if opponent > 1:
+                # you need to choose Rock or Paper
+                your_total_score -= 1
+            # opponent chooses Rock
+            else:
+                # you need to choose Scissors
+                your_total_score += 2
 
     return your_total_score
 
