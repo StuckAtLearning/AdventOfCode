@@ -257,7 +257,9 @@ def part_1_tetris(directions):
 
     current_direction_index = 0
     # 1_000_000_000_000
-    for round_num in range(1, 3000):
+    # 2849 is the second occurrence, height 4438
+    # 1154 is the first occurrence, height 1804
+    for round_num in range(1, 2501):
 
         # print('=== Before Rock Falling ==\n' + '\n'.join([''.join('.#'[y] for y in x) for x in base_floor]) + '\n===')
 
@@ -364,6 +366,7 @@ def part_1_tetris(directions):
         if 1 in row:
             return len(base_floor) - i - 1
 
+
     """
 ..#....
 ####...
@@ -388,6 +391,5 @@ def part_1_tetris(directions):
 if __name__ == "__main__":
     hot_air_push_list = read_push_directions("real_input.txt")
     print(part_1_tetris(hot_air_push_list))
-
 
     # IT"S BROKEN

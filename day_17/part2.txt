@@ -1,7 +1,7 @@
 total number of rocks = 1_000_000_000_000
 minus the first 1154 rocks = 999_999_998_846
 amount of cycles (/1695) in 999_999_998_846 = 589_970_500 with remaining 1346 rocks
-(1346+1154) rock height = 3884
+(1346+1154) + 1 rock height = 3884
 
 total height = 1804 + (589_970_500 * 2634) + (3884 - 1804) = (589_970_500 * 2634) + 3884 = 1553982297000 + 3884
 = 1553982300884
