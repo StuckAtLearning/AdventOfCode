@@ -3,30 +3,44 @@ fn reassign_list_cause_cordy_bad(value_index, new_value, input_list) ->
 
 
 
-fn michael_bublee_merry_christmas_snort(input_list) {
+fn michael_buble_merry_christmas_snort(input_list) {
     let j = 0
     loop {
         if j == input_list . len {
             break
         }
 
-        let i = 0
+        let i = 1
         loop {
-            [i, j, input_list . len] . print
-            if i == (input_list . len) - 1 {
+
+            // debug print
+            //[i, j, input_list . len] . print
+
+            
+            let min_element = [input_list[i-1], input_list[i]] . min
+            let max_element = [input_list[i-1], input_list[i]] . max
+        
+            // Used before List Ass was Done
+            // input_list = input_list
+            //     .reassign_list_cause_cordy_bad(i, min_element)
+            //     .reassign_list_cause_cordy_bad(i+1, max_element)
+
+            input_list[i - 1] = min_element
+            input_list[i] = max_element
+            
+            i += 1
+
+            if i == (input_list . len) {
                 break
             }
+
+            // debug statement
+    	    // if i > 10 { return }
             
-            let min_element = [input_list[i], input_list[i+1]] . min
-            let max_element = [input_list[i], input_list[i+1]] . max
-        
-            input_list = input_list
-                .reassign_list_cause_cordy_bad(i, min_element)
-                .reassign_list_cause_cordy_bad(i+1, max_element)
-	    if i > 10 { return }
-            i += 1
         }
+
     j += 1
+
     }
     // return input_list 
     // but someone is anal
@@ -34,4 +48,5 @@ fn michael_bublee_merry_christmas_snort(input_list) {
 }
 
 
-michael_bublee_merry_christmas_snort([4, 2, 19, 0, -1, '7']) . print
+michael_buble_merry_christmas_snort([4, 2, 5, 8, 0, -1, -1]) . print
+
