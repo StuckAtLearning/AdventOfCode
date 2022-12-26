@@ -10,69 +10,101 @@ def blue_print_passer(blue_print_dict):
     max_obs_needed = blue_print_dict["geo"][1]
 
     @functools.lru_cache(None)
-    def calculate_geodes(time_spent, ore_bot_num, ore_num, clay_bot_num, clay_num,
-                         obs_bot_num, obs_num, geo_bot_num, allow_build_geo_bot_next_step):
+    def calculate_geodes(time_spent, ore_bot_num, ore_num, can_afford_ore_last_round, clay_bot_num, clay_num,
+                         can_afford_clay_last_round, obs_bot_num, obs_num, can_afford_obs_last_round, geo_bot_num,
+                         can_afford_geo_last_round):
+
         # # part 2 only
-        if time_spent >= 32:
-            return 0
+        if time_spent >= 32 - 1:
+            return geo_bot_num
 
         # # part 1 only:
         # if time_spent >= 24:
         #     return 0
 
-        possible_steps = list()
+        possible_steps = [0]
 
         can_build_geo_bot = bool((ore_num >= blue_print_dict["geo"][0]) and (obs_num >= blue_print_dict["geo"][1]))
         can_build_obs_bot = bool(ore_num >= blue_print_dict["obs"][0] and clay_num >= blue_print_dict["obs"][1])
         can_build_ore_bot = bool(ore_num >= blue_print_dict["ore"])
         can_build_clay_bot = bool(ore_num >= blue_print_dict["clay"])
 
-        allow_build_ore_bot_next_step = bool((ore_num-1 < max_ore_needed) and (ore_bot_num-1 < max_ore_needed))
-        allow_build_clay_bot_next_step = bool((clay_num-1 < max_clay_needed) and (clay_bot_num-1 < max_clay_needed))
-        allow_build_obs_bot_next_step = bool((obs_num-1 < max_obs_needed) and (obs_bot_num-1 < max_obs_needed))
+        allow_build_ore_bot = bool((ore_num >= max_ore_needed) and (ore_bot_num >= max_ore_needed))
+        allow_build_clay_bot = bool((clay_num >= max_clay_needed) and (clay_bot_num >= max_clay_needed))
+        allow_build_obs_bot = bool((obs_num >= max_obs_needed) and (obs_bot_num >= max_obs_needed))
 
-        if can_build_geo_bot and allow_build_geo_bot_next_step:
+        if allow_build_ore_bot:
+            ore_num = max_ore_needed
+            ore_bot_num = max_ore_needed
+        if allow_build_clay_bot:
+            clay_num = max_clay_needed
+            clay_bot_num = max_clay_needed
+        if allow_build_obs_bot:
+            obs_num = max_obs_needed
+            obs_bot_num = max_obs_needed
+
+        # if I can afford this round, and I didn't make it, then I should not make it next round either?
+        # so then what happens next round?
+
+        if can_build_geo_bot and (not can_afford_geo_last_round):
             possible_next_step = calculate_geodes(time_spent + 1,
                                                   ore_bot_num, ore_bot_num + ore_num - blue_print_dict["geo"][0],
+                                                  False,
                                                   clay_bot_num, clay_bot_num + clay_num,
+                                                  False,
                                                   obs_bot_num, obs_bot_num + obs_num - blue_print_dict["geo"][1],
-                                                  geo_bot_num + 1, False) + geo_bot_num
+                                                  False,
+                                                  geo_bot_num + 1,
+                                                  False) + geo_bot_num
             possible_steps.append(possible_next_step)
 
-        if can_build_obs_bot and allow_build_obs_bot_next_step:
+        if can_build_obs_bot and (not allow_build_obs_bot) and (not can_afford_obs_last_round):
             possible_next_step = calculate_geodes(time_spent + 1,
                                                   ore_bot_num, ore_bot_num + ore_num - blue_print_dict["obs"][0],
+                                                  False,
                                                   clay_bot_num, clay_bot_num + clay_num - blue_print_dict["obs"][1],
+                                                  False,
                                                   obs_bot_num + 1, obs_bot_num + obs_num,
-                                                  geo_bot_num, True) + geo_bot_num
+                                                  False,
+                                                  geo_bot_num,
+                                                  False) + geo_bot_num
             possible_steps.append(possible_next_step)
 
-        if can_build_ore_bot and allow_build_ore_bot_next_step:
+        if can_build_ore_bot and (not allow_build_ore_bot) and (not can_afford_ore_last_round):
             possible_next_step = calculate_geodes(time_spent + 1,
                                                   ore_bot_num + 1, ore_bot_num + ore_num - blue_print_dict["ore"],
+                                                  False,
                                                   clay_bot_num, clay_bot_num + clay_num,
+                                                  False,
                                                   obs_bot_num, obs_bot_num + obs_num,
-                                                  geo_bot_num, True) + geo_bot_num
+                                                  False,
+                                                  geo_bot_num,
+                                                  False) + geo_bot_num
             possible_steps.append(possible_next_step)
 
-        if can_build_clay_bot and allow_build_clay_bot_next_step:
+        if can_build_clay_bot and (not allow_build_clay_bot) and (not can_afford_clay_last_round):
             possible_next_step = calculate_geodes(time_spent + 1,
                                                   ore_bot_num, ore_bot_num + ore_num - blue_print_dict["clay"],
+                                                  False,
                                                   clay_bot_num + 1, clay_bot_num + clay_num,
+                                                  False,
                                                   obs_bot_num, obs_bot_num + obs_num,
-                                                  geo_bot_num, True) + geo_bot_num
+                                                  False,
+                                                  geo_bot_num,
+                                                  False) + geo_bot_num
             possible_steps.append(possible_next_step)
 
-        possible_next_step = calculate_geodes(time_spent + 1,
-                                              ore_bot_num, ore_bot_num + ore_num,
-                                              clay_bot_num, clay_bot_num + clay_num,
-                                              obs_bot_num, obs_bot_num + obs_num,
-                                              geo_bot_num, True) + geo_bot_num
-        possible_steps.append(possible_next_step)
+        if (not can_build_ore_bot) or (not can_build_clay_bot) or (not can_build_obs_bot) or (not can_build_geo_bot):
+            possible_next_step = calculate_geodes(time_spent + 1,
+                                                  ore_bot_num, ore_bot_num + ore_num, can_build_ore_bot,
+                                                  clay_bot_num, clay_bot_num + clay_num, can_build_clay_bot,
+                                                  obs_bot_num, obs_bot_num + obs_num, can_build_obs_bot,
+                                                  geo_bot_num, can_build_geo_bot) + geo_bot_num
+            possible_steps.append(possible_next_step)
 
         return max(possible_steps)
 
-    return calculate_geodes(0, 1, 0, 0, 0, 0, 0, 0, True)
+    return calculate_geodes(0, 1, 0, False, 0, 0, False, 0, 0, False, 0, False)
 
 
 def part_1(input_dict: dict):
@@ -134,7 +166,13 @@ if __name__ == "__main__":
     # print(part_1_test_answer)
 
     # # part 2 test
-    input_info_dict = convert_file_to_dict("test_input.txt")
+    # input_info_dict = convert_file_to_dict("test_input.txt")
+    # print(input_info_dict)
+    # part_1_test_answer = part_1(input_info_dict)
+    # print(part_1_test_answer)
+
+    # part 2
+    input_info_dict = convert_file_to_dict("real_input.txt")
     print(input_info_dict)
     part_1_test_answer = part_1(input_info_dict)
     print(part_1_test_answer)
