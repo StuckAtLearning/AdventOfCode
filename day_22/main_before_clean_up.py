@@ -29,7 +29,7 @@ def parse_input(input_file_path):
             digit_meter = i + 1
 
     if len(instruction) > digit_meter:
-        parsed_instruction.append(instruction[digit_meter:])
+        parsed_instruction.append(int(instruction[digit_meter:]))
 
     return maze_list, maze_coord_dict, parsed_instruction
 
@@ -265,6 +265,8 @@ def make_cube_face_dict(maze_coord_dict):
     return cube_face_dict
 
 
+bloop = False
+
 def make_a_move(current_coord, current_direction_index):
     # 0 = ">"
     # 1 = "v"
@@ -272,6 +274,9 @@ def make_a_move(current_coord, current_direction_index):
     # 3 = "^"
     row = current_coord[0]
     column = current_coord[1]
+
+    global bloop
+    bloop = True
 
     # left edge of 1, going left
     if (1 <= row <= 50) and (column == 51) and (current_direction_index % 4 == 2):
@@ -317,6 +322,7 @@ def make_a_move(current_coord, current_direction_index):
         return (150, row - 100), 3
     # everything else is normal
     else:
+        bloop = False
         if current_direction_index % 4 == 0:
             return (row, column + 1), 0
         elif current_direction_index % 4 == 1:
@@ -335,9 +341,9 @@ def part_2(maze_coord_dict, maze_width, maze_length, instructions):
     current_direction = direction_list_right_90[current_direction_index]
 
     maze_coord_dict[current_coord] = current_direction
-    for instruction in instructions:#[:60]:
+    for instruction in instructions: #[:500]:
 
-        print(instruction)
+        # print(instruction)
 
         # instruction is to change direction
         if isinstance(instruction, str):
@@ -350,7 +356,9 @@ def part_2(maze_coord_dict, maze_width, maze_length, instructions):
         elif isinstance(instruction, int):
             for step_num in range(instruction):
                 next_coord, new_direction_index = make_a_move(current_coord, current_direction_index)
-                print(next_coord)
+                if bloop:
+                    print(current_coord, "->", next_coord, )
+                    print(direction_list_right_90[current_direction_index], '->', direction_list_right_90[new_direction_index])
 
                 # if the next coordinate is the wall, stop
                 if maze_coord_dict[next_coord] == "#":
@@ -361,9 +369,9 @@ def part_2(maze_coord_dict, maze_width, maze_length, instructions):
                 maze_coord_dict[next_coord] = current_direction
                 current_coord = next_coord
 
-    print(current_coord, current_direction_index % 4)
+    # print(current_coord, current_direction_index % 4)
     print((current_coord[0] * 1000) + (current_coord[1] * 4) + (current_direction_index % 4))
-    print_map(maze_coord_dict, maze_width, maze_length)
+    # print_map(maze_coord_dict, maze_width, maze_length)
 
 
 if __name__ == "__main__":
@@ -379,9 +387,10 @@ if __name__ == "__main__":
 
     # part 2 test
     maze_map, maze_dict, instruction_list = parse_input("real_input.txt")
+    print(instruction_list)
     # make_cube(maze_map, "cube_lookup.txt")
     # cube_dict = make_cube_face_dict(maze_dict)
     # print_map(cube_dict, len(maze_map[0]), len(maze_map))
     # print_map(maze_dict, len(maze_map[0]), len(maze_map))
     part_2(maze_dict, len(maze_map[0]), len(maze_map), instruction_list)
-    # wrong answer: 14451, < 73263, 115369
+    # wrong answer: 14451 < 67303 < 73263, 115369
