@@ -1,4 +1,7 @@
-def part_1(input_file_name):
+from typing import List
+
+
+def part_1(input_file_name: str) -> List[int]:
     input_file = open(input_file_name, "r")
     input_file_line = input_file.readlines()
     input_file_line = [line.strip("\n") for line in input_file_line]

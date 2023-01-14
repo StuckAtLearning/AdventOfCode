@@ -1,6 +1,7 @@
 import ReadFileFunctions as RFF
 
-def part_1(test_input_file_path):
+
+def part_1(test_input_file_path: str) -> int:
     test_input = RFF.read_file_with_new_line(test_input_file_path)
     input_list = map(lambda x: int(x.split(" ")[-1]) if x.split(" ") != ["noop"] else False, test_input)
 
@@ -30,7 +31,7 @@ def part_1(test_input_file_path):
     return signal_strength
 
 
-def part_2(test_input_file_path, output_file_path):
+def part_2(test_input_file_path: str, output_file_path: str) -> None:
     test_input = RFF.read_file_with_new_line(test_input_file_path)
     input_list = map(lambda y: int(y.split(" ")[-1]) if y.split(" ") != ["noop"] else False, test_input)
     output_file = open(output_file_path, "w")
@@ -65,6 +66,7 @@ def part_2(test_input_file_path, output_file_path):
 
         # moving the sprite based on the position of x
         sprite = {(x - 1), x, (x + 1)}
+    return None
 
 
 if __name__ == "__main__":

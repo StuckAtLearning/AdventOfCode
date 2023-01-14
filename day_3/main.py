@@ -30,8 +30,8 @@ def calculate_priority_sum_for_elf_groups(test_input_file: str) -> int:
 
 
 if __name__ == '__main__':
-    backpack_priority_sum = calculate_priority_sum_for_sections("backpack_snack_info.txt")
+    backpack_priority_sum = calculate_priority_sum_for_sections("real_input.txt")
     print(backpack_priority_sum)
 
-    group_priority_sum = calculate_priority_sum_for_elf_groups("backpack_snack_info.txt")
+    group_priority_sum = calculate_priority_sum_for_elf_groups("real_input.txt")
     print(group_priority_sum)

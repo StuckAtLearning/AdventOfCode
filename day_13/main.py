@@ -3,6 +3,7 @@ import itertools
 import ReadFileFunctions as RFF
 import ast
 import functools
+from typing import Union, List
 
 
 """
@@ -34,7 +35,7 @@ import functools
 #     return inserted_list
 
 
-def part_1(input_file_path):
+def part_1(input_file_path: str) -> int:
     input_file = RFF.read_file_double_new_line(input_file_path)
     count = 1
     correct_order = list()
@@ -47,7 +48,7 @@ def part_1(input_file_path):
     return sum(correct_order)
 
 
-def part_2(input_file_path):
+def part_2(input_file_path: str) -> int:
     input_file = RFF.read_file_double_new_line(input_file_path)
     input_list = list()
     for group in input_file:
@@ -64,7 +65,7 @@ def part_2(input_file_path):
     return decoder_key
 
 
-def non_recursive_comparator(left, right):
+def non_recursive_comparator(left: int | list[int], right: int | list[int]) -> int:
     if (isinstance(left, int)) and (isinstance(right, int)):
         if left < right:
             return 1
@@ -95,12 +96,12 @@ def non_recursive_comparator(left, right):
 
 
 if __name__ == "__main__":
-    # part_1_test_answer = part_1("test_input.txt")
+    # part_1_test_answer = part_1("advanced_test_input.txt.txt")
     # print(part_1_test_answer)
     # part_1_answer = part_1("real_input.txt")
     # print(part_1_answer)
 
-    # part_2_test_answer = part_2("test_input.txt")
+    # part_2_test_answer = part_2("advanced_test_input.txt.txt")
     # print(part_2_test_answer)
 
     part_2_answer = part_2("real_input.txt")

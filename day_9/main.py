@@ -1,7 +1,8 @@
 import ReadFileFunctions as RFF
+from typing import Tuple
 
 
-def move_coord(current_coord, check_coord):
+def move_coord(current_coord: Tuple[int, int], check_coord: Tuple[int, int]) -> Tuple[int, int]:
     # both coordinates in the format of [x, y]
     # return current_coord is on the _ side of check_coord
     move_coord = [0, 0]
@@ -16,45 +17,13 @@ def move_coord(current_coord, check_coord):
     return (current_coord[0]+move_coord[0], current_coord[1]+move_coord[1])
 
 
-def check_neighbours(current_coord, check_coord):
+def check_neighbours(current_coord: Tuple[int, int], check_coord: Tuple[int, int]) -> bool:
     if (abs(current_coord[0] - check_coord[0]) < 2) and (abs(current_coord[1] - check_coord[1]) < 2):
         return True
     return False
 
 
-    # if (current_coord[0] == check_coord[0]) and (current_coord[1] == (check_coord[1]-2)):
-    #     return (current_coord[0], current_coord[1] + 1)
-    # elif (current_coord[0] == check_coord[0]) and (current_coord[1] == (check_coord[1]+2)):
-    #     return (current_coord[0], current_coord[1] - 1)
-    # elif (current_coord[0] == (check_coord[0]-2)) and (current_coord[1] == check_coord[1]):
-    #     return (current_coord[0] + 1, current_coord[1])
-    # elif (current_coord[0] == (check_coord[0]+2)) and (current_coord[1] == check_coord[1]):
-    #     return (current_coord[0] - 1, current_coord[1])
-    #
-    # elif (current_coord[0] == (check_coord[0]+1)) and (current_coord[1] == (check_coord[1]+1)):
-    #     return current_coord #(current_coord[0] - 1, current_coord[1] - 1)
-    # elif (current_coord[0] == (check_coord[0]+1)) and (current_coord[1] == (check_coord[1]-1)):
-    #     return current_coord #(current_coord[0] - 1, current_coord[1] + 1)
-    # elif (current_coord[0] == (check_coord[0]-1)) and (current_coord[1] == (check_coord[1]+1)):
-    #     return current_coord #(current_coord[0] + 1, current_coord[1] - 1)
-    # elif (current_coord[0] == (check_coord[0]-1)) and (current_coord[1] == (check_coord[1]-1)):
-    #     return current_coord #(current_coord[0] + 1, current_coord[1] + 1)
-    # return current_coord
-
-    # elif (current_coord[0] == (check_coord[0] + 1)) and (current_coord[1] == (check_coord[1] + 1)):
-    #     return (current_coord[0]-1, current_coord[1]-1), "north-east"
-    # elif (current_coord[0] == (check_coord[0] + 1)) and (current_coord[1] == (check_coord[1] - 1)):
-    #     return (current_coord[0]-1, current_coord[1]+1), "south-east"
-    # elif (current_coord[0] == (check_coord[0] - 1)) and (current_coord[1] == (check_coord[1] + 1)):
-    #     return (current_coord[0]+1, current_coord[1]-1), "north-west"
-    # elif (current_coord[0] == (check_coord[0] - 1)) and (current_coord[1] == (check_coord[1] - 2)):
-    #     return (current_coord[0]+1, current_coord[1]+1), "south-west"
-    #
-    # else:
-    #     return (0, 0), "none"
-
-
-def part_1(test_input_file):
+def part_1(test_input_file: str) -> int:
     test_input = RFF.read_file_with_new_line(test_input_file)
     point_visited = set()
     starting_point = (0, 0)
@@ -102,7 +71,7 @@ def part_1(test_input_file):
     return len(point_visited)
 
 
-def part_2(test_input_file):
+def part_2(test_input_file: str) -> int:
     test_input = RFF.read_file_with_new_line(test_input_file)
     point_visited = set()
     starting_point = (0, 0)
@@ -164,7 +133,7 @@ def part_2(test_input_file):
 
 
 if __name__ == "__main__":
-    # print(part_1("test_input.txt"))
+    # print(part_1("small_test_input.txt"))
     # print(part_1("real_input.txt"))
 
     print(part_2("test_input.txt"))

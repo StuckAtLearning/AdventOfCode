@@ -1,7 +1,7 @@
 import ReadFileFunctions as RFF
 from collections import Counter
 
-def part_1(test_input_file_path):
+def part_1(test_input_file_path: str) -> int:
     test_input = RFF.read_file_double_new_line(test_input_file_path)
     monkey_info = dict()
     for monkey in test_input:
@@ -55,13 +55,13 @@ def part_1(test_input_file_path):
 
 
 if __name__ == "__main__":
-    # test_answer = part_1("test_input.txt")
+    # test_answer = part_1("advanced_test_input.txt.txt")
     # print(test_answer)
 
     # part_1_answer = part_1("real_input.txt")
     # print(part_1_answer)
 
-    # part_2_answer = part_1("test_input.txt")
+    # part_2_answer = part_1("advanced_test_input.txt.txt")
     # print(part_2_answer)
 
     part_2_answer = part_1("real_input.txt")

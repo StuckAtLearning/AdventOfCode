@@ -1,7 +1,8 @@
 import ReadFileFunctions as RFF
+from typing import Dict, List, Tuple
 
 
-def part_1(input_file_name):
+def part_1(input_file_name: str) -> Tuple[int, Dict[str, int]]:
     input_file = RFF.read_file_with_new_line(input_file_name)
     cleaned_input = [line.split(" ") for line in input_file]
 
@@ -41,7 +42,7 @@ def part_1(input_file_name):
     return total_sum, dir_dict
 
 
-def part_2(dir_lookup):
+def part_2(dir_lookup: Dict[str, int]) -> int:
     space_now = 70_000_000 - dir_lookup["/"]
     delete_space = 30_000_000 - space_now
     file_sizes = sorted(dir_lookup.values())

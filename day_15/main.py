@@ -1,7 +1,7 @@
 import ReadFileFunctions as RFF
 
 
-def parse_info(input_file_path):
+def parse_info(input_file_path: str) -> list[list[tuple[int, int]]]:
     input_file = RFF.read_file_with_new_line(input_file_path)
     input_list = list()
     for line in input_file:
@@ -19,7 +19,7 @@ def parse_info(input_file_path):
     return input_list
 
 
-def get_signal_relations(input_list):
+def get_signal_relations(input_list: list[list[tuple[int, int]]]) -> dict[tuple[int, int], list[tuple[int, int]]]:
     signal_info_dict = dict()
     beacon_seen = set()
     for signal_info in input_list:
@@ -34,7 +34,7 @@ def get_signal_relations(input_list):
     return signal_info_dict
 
 
-def find_width(input_list):
+def find_width(input_list: list[list[tuple[int, int]]]) -> :
     width_start = int()
     width_end = int()
     for signal_info in input_list:
@@ -110,7 +110,7 @@ def find_possible_beacon(signal_info_list, left_boundary, right_boundary):
 
 if __name__ == "__main__":
     # test part 1:
-    # input_info = parse_info("test_input.txt")
+    # input_info = parse_info("advanced_test_input.txt.txt")
     # signal_dict = get_signal_relations(input_info)
     # left_bound, right_bound = find_width(input_info)
     # distance_info = get_sensor_beacon_distance(signal_dict)

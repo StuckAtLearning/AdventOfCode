@@ -5,7 +5,7 @@ import ReadFileFunctions as RFF
 
 def calories_tracker():
     # I swear this function is forcing me to go to the gym...
-    calories_profile = RFF.read_file_double_new_line("elf_calories.txt")
+    calories_profile = RFF.read_file_double_new_line("real_input.txt")
 
     max_calories = max(map(lambda x: sum(map(int, x)), calories_profile))
     top_three_calories = sum(sorted(map(lambda x: sum(map(int, x)), calories_profile))[-3:])

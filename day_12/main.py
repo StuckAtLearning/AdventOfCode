@@ -1,9 +1,10 @@
 import ReadFileFunctions as RFF
 from anytree import Node, RenderTree
 from collections import defaultdict, deque
+from typing import List, Tuple, Union
 
 
-def find_point(input_list, target_point):
+def find_point(input_list: List[str], target_point: str) -> Union[tuple[int, int], str]:
     for i in range(len(input_list)):
         for j in range(len(input_list[i])):
             if input_list[i][j] == target_point:
@@ -11,7 +12,7 @@ def find_point(input_list, target_point):
     return "input does not have target point"
 
 
-def get_neighbours(current_index, dimensions):
+def get_neighbours(current_index: Tuple[int, int], dimensions: Tuple[int, int]) -> List[Tuple[int, int]]:
     x, y = current_index
     length, width = dimensions
     all_neighbours = []
@@ -32,7 +33,7 @@ def get_neighbours(current_index, dimensions):
     return all_neighbours
 
 
-def find_all_chr(input_list, target_point):
+def find_all_chr(input_list: List[str], target_point: str) -> List[Tuple[Tuple[int, int], 0]]:
     all_points = list()
     for i in range(len(input_list)):
         for j in range(len(input_list[i])):
@@ -41,7 +42,8 @@ def find_all_chr(input_list, target_point):
     return all_points
 
 
-def find_distance(start_index, end_index, input_list):
+def find_distance(start_index: Tuple[int, int], end_index: Tuple[int, int], input_list: List[str]) -> \
+        Union[int, "fucked up you dingus"]:
     length, width = len(input_list), len(input_list[0])
     # start_indices = deque([(start_index, 0)])
     start_indices = deque(find_all_chr(input_list, "a"))
@@ -66,7 +68,7 @@ def find_distance(start_index, end_index, input_list):
     return "fucked up you dingus"
 
 
-def part_1(test_input_file_path):
+def part_1(test_input_file_path: str) -> int:
     test_input = RFF.read_file_with_new_line(test_input_file_path)
 
     # tuples
@@ -84,13 +86,13 @@ def part_1(test_input_file_path):
 
 
 if __name__ == "__main__":
-    # part_1_test_answer = part_1("test_input.txt")
+    # part_1_test_answer = part_1("advanced_test_input.txt.txt")
     # print(part_1_test_answer)
     #
     # part_1_answer = part_1("real_input.txt")
     # print(part_1_answer)
 
-    # part_2_test_answer = part_1("test_input.txt")
+    # part_2_test_answer = part_1("advanced_test_input.txt.txt")
     # print(part_2_test_answer)
 
     part_2_answer = part_1("real_input.txt")

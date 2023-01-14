@@ -2,7 +2,7 @@ import ReadFileFunctions as RFF
 import ast
 
 
-def part_1(input_file_path):
+def part_1(input_file_path: str) -> int:
     input_file = RFF.read_file_with_new_line(input_file_path)
     rock_list = list()
     for line in input_file:
@@ -79,7 +79,7 @@ def part_1(input_file_path):
 
 
 if __name__ == "__main__":
-    # part_1_test_answer = part_1("test_input.txt")
+    # part_1_test_answer = part_1("advanced_test_input.txt.txt")
     # print(part_1_test_answer)
     #
     # part_1_answer = part_1("real_input.txt")

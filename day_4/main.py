@@ -1,10 +1,10 @@
 from typing import Tuple, Set, Any
 
 import ReadFileFunctions as RFF
-from typing import List
+from typing import Tuple, Set
 
 
-def parse_assignments(input_assignments: str) -> tuple[set[int], set[int]]:
+def parse_assignments(input_assignments: str) -> Tuple[Set[int], Set[int]]:
     pairings = input_assignments.split(",")
     first_elf = (int(pairings[0].split("-")[0]), int(pairings[0].split("-")[1]))
     second_elf = (int(pairings[1].split("-")[0]), int(pairings[1].split("-")[1]))
@@ -16,7 +16,7 @@ def parse_assignments(input_assignments: str) -> tuple[set[int], set[int]]:
 
 
 # my naming creativity apparently flies out of the window when it hits Day 4, good to know
-def part_1(test_input_file):
+def part_1(test_input_file: str) -> int:
     work_assignments = RFF.read_file_with_new_line(test_input_file)
     overlap_count = 0
     for assignment in work_assignments:
@@ -27,7 +27,7 @@ def part_1(test_input_file):
     return overlap_count
 
 
-def part_2(test_input_file):
+def part_2(test_input_file: str) -> int:
     work_assignments = RFF.read_file_with_new_line(test_input_file)
     overlap_count = 0
     for assignment in work_assignments:

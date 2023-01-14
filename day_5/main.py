@@ -1,15 +1,15 @@
 import ReadFileFunctions as RFF
+from typing import List, Dict, Tuple
 
 
-def parse_crates(crates_input_file_name):
+def parse_crates(crates_input_file_name: str) -> Dict[str, str]:
     crates_input_file = open(crates_input_file_name, "r")
     crates_info = crates_input_file.readlines()
 
-    crates_stacks = crates_info[:-1]
-    crates_number = crates_info[-1]
+    crates_stacks, crates_number = crates_info[:-1], crates_info[-1]
 
-    crates_tuples = [(a, "") for a in crates_number if a != " "]
-    crate_dict = {key: value for (key, value) in crates_tuples}
+    crates_tuples = [(crate_num, "") for crate_num in crates_number if crate_num != " "]
+    crate_dict = {crate_num: crates for (crate_num, crates) in crates_tuples}
 
     for crates in crates_stacks:
         crate_position = 1
@@ -21,7 +21,7 @@ def parse_crates(crates_input_file_name):
     return crate_dict
 
 
-def parse_instructions(instruction_input_file_name):
+def parse_instructions(instruction_input_file_name: str) -> List[Tuple[int, str, str]]:
     instruction_file = RFF.read_file_with_new_line(instruction_input_file_name)
     instruction_list = list()
 
@@ -32,7 +32,7 @@ def parse_instructions(instruction_input_file_name):
     return instruction_list
 
 
-def move_crates(crates, instructions):
+def move_crates(crates: Dict[str, str], instructions: List[Tuple[int, str, str]]) -> str:
     for instruction in instructions:
         move_num, from_num, to_num = instruction[0], instruction[1], instruction[2]
         crates_moved = crates[from_num][:move_num]

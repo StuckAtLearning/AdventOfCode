@@ -1,9 +1,10 @@
 import ReadFileFunctions as RFF
 import HelperFunctions as HF
 import numpy as np
+from typing import Tuple, List
 
 
-def part_1(input_file_path):
+def part_1(input_file_path: str) -> Tuple[int, int]:
     test_input = RFF.read_file_with_new_line(input_file_path)
     test_input = np.array([list(line) for line in test_input])
 
