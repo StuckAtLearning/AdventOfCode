@@ -6,13 +6,13 @@ SNAFU_LOOK_UP = {"2": 2, "1": 1, "0": 0, "-": -1, "=": -2}
 DECIMAL_LOOK_UP = {value: key for key, value in SNAFU_LOOK_UP.items()}
 
 
-def parse_input(input_file_path):
+def parse_input(input_file_path: str) -> list[str]:
     input_file = RFF.read_file_with_new_line(input_file_path)
 
     return input_file
 
 
-def snafu_to_decimal(snafu: str):
+def snafu_to_decimal(snafu: str) -> int:
     digits = [5**i for i in range(len(snafu))][::-1]
     decimal = 0
     for i, c in enumerate(snafu):
@@ -20,7 +20,7 @@ def snafu_to_decimal(snafu: str):
     return decimal
 
 
-def decimal_to_snafu(decimal: int):
+def decimal_to_snafu(decimal: int) -> str:
     decimal_length = 0
     while decimal > 5**decimal_length:
         decimal_length += 1
@@ -58,7 +58,7 @@ def decimal_to_snafu(decimal: int):
     return snafu
 
 
-def part_1(snafu_inputs: list):
+def part_1(snafu_inputs: list[str]) -> str:
     total = 0
     for number in snafu_inputs:
         total += snafu_to_decimal(number)

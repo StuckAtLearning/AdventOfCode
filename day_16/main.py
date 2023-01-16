@@ -5,7 +5,7 @@ import itertools
 import functools
 
 
-def parse_file_to_dict(file_path):
+def parse_file_to_dict(file_path: str) -> dict[str, list[int | list[str]]]:
     input_file = RFF.read_file_with_new_line(file_path)
     valve_dict = dict()
 
@@ -24,7 +24,8 @@ def parse_file_to_dict(file_path):
     return valve_dict
 
 
-def calculate_distance(starting_valve, destination_valve, valve_info_dict, seen_valve):
+def calculate_distance(starting_valve: str, destination_valve: str, valve_info_dict: dict[str, list[int | list[str]]],
+                       seen_valve: set[str]) -> int:
     next_valves = valve_info_dict[starting_valve][1]
     if destination_valve in next_valves:
         return 1
@@ -38,7 +39,7 @@ def calculate_distance(starting_valve, destination_valve, valve_info_dict, seen_
     return valve_dis
 
 
-def build_paths(valve_info_dict):
+def build_paths(valve_info_dict: dict[str, list[int | list[str]]]) -> dict[str, dict[str, int]]:
     paths = dict()
     all_valves = valve_info_dict.keys()
     for valve, info in valve_info_dict.items():
@@ -50,7 +51,7 @@ def build_paths(valve_info_dict):
     return paths
 
 
-def get_all_pressures(time_left):
+def get_all_pressures(time_left: int) -> dict[str, dict[str, int | list[str]]]:
     all_pressures = dict()
     for valve, paths in all_paths.items():
         pressure_info = dict()
@@ -66,7 +67,7 @@ def get_all_pressures(time_left):
 
 
 @functools.lru_cache(None)
-def get_most_pressures(opened_valves, starting_valve, current_time):
+def get_most_pressures(opened_valves: frozenset[str], starting_valve: str, current_time: int) -> int:
     if current_time >= 30:
         return 0
     max_pressure = 0
@@ -96,7 +97,7 @@ def get_most_pressures(opened_valves, starting_valve, current_time):
 #         return combination
 
 
-def divide_work():
+def divide_work() -> int:
     all_valves = list(all_paths.keys())
     # I don't know if this is going to work:
     non_zero_valves = [v for v in all_valves if valve_dict[v][0] != 0]
@@ -121,25 +122,6 @@ def divide_work():
                 print(max_pressure)
 
     return max_pressure
-
-
-def dp():
-    all_valves = set(valve_dict.keys())
-    my_ass = divide_work()
-    dp = dict()
-    for ass in my_ass:
-        if len(ass) == 1:
-            my_valves = set(ass)
-            print(my_valves)
-            elephant_valves = set(all_valves - my_valves)
-            dp[ass] = get_most_pressures(elephant_valves, "AA", 4)
-            my_ass.remove(ass)
-
-    # for ass in my_ass:
-    #     my_valves = set(ass)
-    #     dp[ass] = dp[] + get_most_pressures(all_paths, valve_info_dict, my_valves-, "AA", 4)
-
-    return dp
 
 
 # def part_2():

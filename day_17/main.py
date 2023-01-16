@@ -1,7 +1,7 @@
 import copy
 
 
-def get_rock(n_th_fall):
+def get_rock(n_th_fall: int) -> list[list[int]]:
     order_of_rocks = ["-", "+", "L", "I", "#"]
     rocks_shape_dict = {"-": [[1, 1, 1, 1]],
                         "+": [[0, 1, 0],
@@ -22,24 +22,24 @@ def get_rock(n_th_fall):
     return current_rock_shape
 
 
-def get_rock_height(rock_shape):
+def get_rock_height(rock_shape: list[list[int]]) -> int:
     rock_height = len(rock_shape)
     return rock_height
 
 
-def get_rock_width(rock_shape):
+def get_rock_width(rock_shape: list[list[int]]) -> int:
     rock_width = len(rock_shape[0])
     return rock_width
 
 
-def read_push_directions(directions_file_path):
+def read_push_directions(directions_file_path: str) -> list[str]:
     directions_file = open(directions_file_path, "r")
     directions = directions_file.readlines()
     directions_list = [str(direction) for direction in directions[0]]
     return directions_list
 
 
-def push_rock(directions, direction_index, rock_width, start_index, rock_shape, base_floor_shape):
+def push_rock(directions: list[str], direction_index: int, rock_width: int, start_index: int) -> int:
     # push to the right
     if directions[direction_index % len(directions)] == ">":
         if start_index + rock_width < 7:
@@ -56,7 +56,7 @@ def push_rock(directions, direction_index, rock_width, start_index, rock_shape, 
     return start_index
 
 
-def get_rock_index(one_row):
+def get_rock_index(one_row: list[list[int]]) -> list[int]:
     indices = list()
     for index_count, cell in enumerate(one_row):
         if cell == 1:
@@ -64,7 +64,8 @@ def get_rock_index(one_row):
     return indices
 
 
-def check_going_down(current_checking_row_num, current_rock, base_floor_map, start_index):
+def check_going_down(current_checking_row_num: int, current_rock: list[list[int]], base_floor_map: list[list[int]],
+                     start_index: int) -> bool:
     row_window = list()
     for i in range(len(current_rock)):
         row_window.append(base_floor_map[current_checking_row_num + 1 + i])
@@ -119,7 +120,8 @@ def check_going_down(current_checking_row_num, current_rock, base_floor_map, sta
     #     return False
 
 
-def check_go_right(current_checking_row_num, current_rock, base_floor_map, start_index):
+def check_go_right(current_checking_row_num: int, current_rock: list[list[int]], base_floor_map: list[list[int]],
+                   start_index: int) -> bool:
     row_window = list()
     for i in range(len(current_rock)):
         row_window.append(base_floor_map[current_checking_row_num + i])
@@ -183,7 +185,8 @@ def check_go_right(current_checking_row_num, current_rock, base_floor_map, start
     # return True
 
 
-def check_go_left(current_checking_row_num, current_rock, base_floor_map, start_index):
+def check_go_left(current_checking_row_num: int, current_rock: list[list[int]], base_floor_map: list[list[int]],
+                  start_index: int) -> bool:
     row_window = list()
     for i in range(len(current_rock)):
         row_window.append(base_floor_map[current_checking_row_num + i])
@@ -237,19 +240,19 @@ def check_go_left(current_checking_row_num, current_rock, base_floor_map, start_
     # return True
 
 
-def get_top_rock_height(base_floor_map):
+def get_top_rock_height(base_floor_map: list[list[int]]) -> int:
     for i in range(len(base_floor_map)):
         if 1 in base_floor_map[i]:
             return i
 
 
-def organize_base_floor(old_base_floor):
+def organize_base_floor(old_base_floor: list[list[int]]) -> list[list[int]]:
     top_rock_height = get_top_rock_height(old_base_floor)
     new_base_floor = old_base_floor[top_rock_height:]
     return new_base_floor
 
 
-def part_1_tetris(directions):
+def part_1_tetris(directions: list[str]) -> int:
     buffer_room = [0]*7
     base_floor = [[1] * 7]
     floor_height = len(base_floor) - 3
@@ -298,8 +301,7 @@ def part_1_tetris(directions):
                 if check_go_right(examine_row_num, current_rock_shape, base_floor, start_index):
                     # print("can't go right at: ", start_index)
                     # print('Passed Rock check')
-                    start_index = push_rock(directions, current_direction_index % directions_length, current_rock_width, start_index,
-                                            current_rock_shape, base_floor)
+                    start_index = push_rock(directions, current_direction_index % directions_length, current_rock_width, start_index)
 
                     # update the new bottom row
                     rock_bottom_row = [0] * start_index + current_rock_shape[-1] + [0] * (
@@ -307,8 +309,7 @@ def part_1_tetris(directions):
             else:
                 if check_go_left(examine_row_num, current_rock_shape, base_floor, start_index):
                     # print('Passed rock check')
-                    start_index = push_rock(directions, current_direction_index % directions_length, current_rock_width, start_index,
-                                        current_rock_shape, base_floor)
+                    start_index = push_rock(directions, current_direction_index % directions_length, current_rock_width, start_index)
 
                     # update the new bottom row
                     rock_bottom_row = [0] * start_index + current_rock_shape[-1] + [0] * (7-current_rock_width-start_index)

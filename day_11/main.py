@@ -1,5 +1,5 @@
 import ReadFileFunctions as RFF
-from collections import Counter
+
 
 def part_1(test_input_file_path: str) -> int:
     test_input = RFF.read_file_double_new_line(test_input_file_path)

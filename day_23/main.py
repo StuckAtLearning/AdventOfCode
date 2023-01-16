@@ -1,7 +1,9 @@
+from typing import Tuple, Set
+
 import ReadFileFunctions as RFF
 
 
-def parse_input(input_file_path):
+def parse_input(input_file_path: str) -> tuple[set[tuple[int, int]], set[tuple[int, int]]]:
     input_file = RFF.read_file_with_new_line(input_file_path)
 
     dot_coords = set()
@@ -16,7 +18,7 @@ def parse_input(input_file_path):
     return dot_coords, hash_tag_coords
 
 
-def shift_coords(coords_set: set):
+def shift_coords(coords_set: set[tuple[int, int]]) -> set[tuple[int, int]]:
     new_coords_set = set()
     for coord in coords_set:
         new_coord = (coord[0] + 1, coord[1] + 1)
@@ -24,14 +26,14 @@ def shift_coords(coords_set: set):
     return new_coords_set
 
 
-def get_map_dimension(hash_tag_coords):
+def get_map_dimension(hash_tag_coords: set[tuple[int, int]]) -> tuple[int, int]:
     length = abs(max(hash_tag_coords, key=lambda a: a[0])[0] - min(hash_tag_coords, key=lambda a: a[0])[0])
     width = abs(max(hash_tag_coords, key=lambda a: a[1])[1] - min(hash_tag_coords, key=lambda a: a[1])[1])
 
     return length, width
 
 
-def print_map(hash_tag_coords):
+def print_map(hash_tag_coords: set[tuple[int, int]]) -> int:
     min_x = min(x for x, _ in hash_tag_coords)
     max_x = max(x for x, _ in hash_tag_coords)
     min_y = min(y for _, y in hash_tag_coords)
@@ -51,7 +53,7 @@ def print_map(hash_tag_coords):
     return count_white_space
 
 
-def propose_position(current_coord, hash_tag_coords, round_count):
+def propose_position(current_coord: tuple[int, int], hash_tag_coords: set[tuple[int, int]], round_count: int) -> tuple[int, int]:
     x = current_coord[0]
     y = current_coord[1]
     nw = (x-1, y-1)
@@ -111,7 +113,7 @@ def propose_position(current_coord, hash_tag_coords, round_count):
         return current_coord
 
 
-def part_1(hash_tag_coords):
+def part_1(hash_tag_coords: set[tuple[int, int]]) -> int:
     # part 1 only
     # for i in range(10):
     i = 0

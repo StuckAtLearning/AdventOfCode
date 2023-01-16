@@ -5,7 +5,7 @@ SYMBOL_LOOKUP = {(1, 0): ">", (0, 1): "v", (-1, 0): "<", (0, -1): "^", None: "#"
 DICT_LOOKUP = {value: key for key, value in SYMBOL_LOOKUP.items()}
 
 
-def parse_input(input_file_path):
+def parse_input(input_file_path: str) -> tuple[dict[tuple[int, int], list], int, int]:
     input_file = RFF.read_file_with_new_line(input_file_path)
 
     width = len(input_file[0])
@@ -27,7 +27,7 @@ def parse_input(input_file_path):
     return coord_dict, width, length
 
 
-def print_map(coord_dict, width, length, current_coord=None):
+def print_map(coord_dict: dict[tuple[int, int], list], width: int, length: int, current_coord: int | None = None) -> None:
     coord_list = list()
     for i in range(length):
         coord_list.append(list())
@@ -50,7 +50,7 @@ def print_map(coord_dict, width, length, current_coord=None):
     print("\n".join("".join(row) for row in coord_list), "\n")
 
 
-def wrap_action(action, current_coord, width, length):
+def wrap_action(action: tuple[int, int], current_coord: tuple[int, int], width: int, length: int) -> tuple[int, int]:
     if action == (1, 0):
         return (1, current_coord[1])
     elif action == (-1, 0):
@@ -61,7 +61,7 @@ def wrap_action(action, current_coord, width, length):
         return (current_coord[0], length-2)
 
 
-def move_blizzard(coord_dict, width, length):
+def move_blizzard(coord_dict: dict[tuple[int, int], list], width: int, length: int) -> dict[tuple[int, int], list]:
     new_coord_dict = dict()
     for coord, symbol in coord_dict.items():
         # if it is a wall or the starting/ending point
@@ -90,7 +90,7 @@ def move_blizzard(coord_dict, width, length):
     return new_coord_dict
 
 
-def get_empty_neighbours(current_coord, coord_dict):
+def get_empty_neighbours(current_coord: tuple[int, int], coord_dict: dict[tuple[int, int], list]) -> list[tuple[int, int]]:
     x, y = current_coord
     above = (x, y-1)
     below = (x, y+1)
@@ -106,7 +106,8 @@ def get_empty_neighbours(current_coord, coord_dict):
     return empty_neighbours
 
 
-def part_1(blizzards, width, length, starting_coord, destination_coord):
+def part_1(blizzards: dict[tuple[int, int], list], width: int, length: int, starting_coord: tuple[int, int],
+           destination_coord: tuple[int, int]) -> tuple[int, dict[tuple[int, int], list]]:
     queue = deque([(starting_coord, 0)])
     seen = set()
     prev_minute = 0

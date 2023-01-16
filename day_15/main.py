@@ -34,7 +34,7 @@ def get_signal_relations(input_list: list[list[tuple[int, int]]]) -> dict[tuple[
     return signal_info_dict
 
 
-def find_width(input_list: list[list[tuple[int, int]]]) -> :
+def find_width(input_list: list[list[tuple[int, int]]]) -> tuple[int, int]:
     width_start = int()
     width_end = int()
     for signal_info in input_list:
@@ -46,7 +46,8 @@ def find_width(input_list: list[list[tuple[int, int]]]) -> :
     return width_start, width_end
 
 
-def get_sensor_beacon_distance(signal_info_dict):
+def get_sensor_beacon_distance(signal_info_dict: dict[tuple[int, int], list[tuple[int, int]]]) -> \
+        list[tuple[int, int, int]]:
     distance_info_list = list()
     for beacon_info, sensor_info in signal_info_dict.items():
         for each_sensor_coord in sensor_info:
@@ -59,7 +60,9 @@ def get_sensor_beacon_distance(signal_info_dict):
     return distance_info_list
 
 
-def find_distress_signal(distance_info_list, signal_dict, left_boundary, right_boundary, check_y_coord):
+def find_distress_signal(distance_info_list: list[tuple[int, int, int]],
+                         signal_dict: dict[tuple[int, int], list[tuple[int, int]]],
+                         left_boundary: int, right_boundary: int, check_y_coord: int):
     count = 0
     beacon_positions = signal_dict.keys()
     for i in range(left_boundary-4_000_000, right_boundary+4_000_000):
@@ -77,7 +80,7 @@ def find_distress_signal(distance_info_list, signal_dict, left_boundary, right_b
     return count
 
 
-def find_possible_beacon(signal_info_list, left_boundary, right_boundary):
+def find_possible_beacon(signal_info_list: list[tuple[int, int, int]], left_boundary: int, right_boundary: int):
     for y in range(left_boundary, right_boundary+1):
         check_list = list()
         for signal_info in signal_info_list:

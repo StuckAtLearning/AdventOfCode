@@ -1,7 +1,4 @@
-from typing import List
-
-
-def find_common_element(list_of_iterables: List[str]) -> List:
+def find_common_element(list_of_iterables: list[str]) -> list:
     # we can just use set(a) & set(b) & set(c)
     # but because someone has shown me this, so we are not going do that
     # we are ORIGINAL!!! we are hip, as the cool kids say these days

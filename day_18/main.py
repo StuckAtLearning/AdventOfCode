@@ -2,7 +2,7 @@ import ReadFileFunctions as RFF
 import ast
 
 
-def check_sides(input_file_path):
+def check_sides(input_file_path: str) -> dict[str, list[int]]:
     input_file = RFF.read_file_with_new_line(input_file_path)
     input_file = [ast.literal_eval(i) for i in input_file]
 
@@ -40,7 +40,7 @@ def check_sides(input_file_path):
     return sides_dict
 
 
-def part_1(sides_dict):
+def part_1(sides_dict: dict[str, list[int]]) -> int:
     side_count = 0
     for sides in sides_dict.values():
         side_count += sides.count(1)
@@ -48,7 +48,7 @@ def part_1(sides_dict):
     return side_count
 
 
-def part_2(input_file_path, output_file_path):
+def part_2(input_file_path: str, output_file_path: str) -> int:
     output_file = open(output_file_path, "w")
     input_file = RFF.read_file_with_new_line(input_file_path)
     coords_list = [ast.literal_eval(i) for i in input_file]
@@ -105,7 +105,7 @@ def part_2(input_file_path, output_file_path):
     return box_outside_sa
 
 
-def check_connection(current_cube, check_cube):
+def check_connection(current_cube: tuple[int, int, int], check_cube: tuple[int, int, int]) -> bool:
     current_x, current_y, current_z = current_cube
     check_x, check_y, check_z = check_cube
 

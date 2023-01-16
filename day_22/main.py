@@ -1,7 +1,9 @@
+from typing import Tuple, List, Dict
+
 import ReadFileFunctions as RFF
 
 
-def parse_input(input_file_path):
+def parse_input(input_file_path: str) -> tuple[list[list[str]], dict[tuple[int, int], str], list[int | str]]:
     input_file = RFF.read_file_with_new_line(input_file_path)
 
     # parsing the maze into a list format and a coordinate format
@@ -34,7 +36,7 @@ def parse_input(input_file_path):
     return maze_list, maze_coord_dict, parsed_instruction
 
 
-def print_map(maze_coord_dict, maze_width, maze_length):
+def print_map(maze_coord_dict: dict[tuple[int, int], str], maze_width: int, maze_length: int) -> None:
     maze_list = list()
     for row in range(maze_length):
         maze_list.append(list())
@@ -49,7 +51,7 @@ def print_map(maze_coord_dict, maze_width, maze_length):
     print('\n'.join(''.join(row) for row in maze_list))
 
 
-def part_1(maze_coord_dict, maze_width, maze_length, instructions):
+def part_1(maze_coord_dict: dict[tuple[int, int], str], maze_width: int, maze_length: int, instructions: list[str]) -> None:
     # test input start at (1, 9)
     current_coord = (1, 51)
     current_direction_index = 0
@@ -210,7 +212,7 @@ def part_1(maze_coord_dict, maze_width, maze_length, instructions):
 
 
 # hard code a representation of the sube folding for the real input
-def make_cube(maze_list, output_file_path):
+def make_cube(maze_list: dict[tuple[int, int], str], output_file_path: str) -> None:
     output_file = open(output_file_path, "w")
 
     row_count = 0
@@ -242,7 +244,7 @@ def make_cube(maze_list, output_file_path):
         output_file.write(str(cube_row) + "\n")
 
 
-def make_cube_face_dict(maze_coord_dict):
+def make_cube_face_dict(maze_coord_dict: dict[tuple[int, int], str]) -> dict[tuple[int, int], str]:
     cube_face_dict = dict()
     for coord, symbol in maze_coord_dict.items():
         row_num = coord[0]
@@ -267,7 +269,7 @@ def make_cube_face_dict(maze_coord_dict):
 
 bloop = False
 
-def make_a_move(current_coord, current_direction_index):
+def make_a_move(current_coord: tuple[int, int], current_direction_index: int) -> tuple[tuple[int, int], int]:
     # 0 = ">"
     # 1 = "v"
     # 2 = "<"
@@ -333,7 +335,7 @@ def make_a_move(current_coord, current_direction_index):
             return (row - 1, column), 3
 
 
-def part_2(maze_coord_dict, maze_width, maze_length, instructions):
+def part_2(maze_coord_dict: dict[tuple[int, int], str], maze_width: int, maze_length: int, instructions: list[str]) -> None:
     # test input start at (1, 9), real input starts at (1, 51)
     current_coord = (1, 51)
     current_direction_index = 0

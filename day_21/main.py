@@ -1,7 +1,7 @@
 import ReadFileFunctions as RFF
 
 
-def parse_input(input_file_path):
+def parse_input(input_file_path: str) -> tuple[dict[str, int | list[str]], list[str]]:
     monkey_dict = dict()
     monkey_appearance = list()
     input_file = RFF.read_file_with_new_line(input_file_path)
@@ -20,7 +20,7 @@ def parse_input(input_file_path):
     return monkey_dict, monkey_appearance
 
 
-def part_1(current_monkey, monkey_dict, num_monkeys):
+def part_1(current_monkey: str, monkey_dict: dict[str, int | list[str]], num_monkeys: list[str]) -> int | list[str]:
     if current_monkey in num_monkeys:
         return monkey_dict[current_monkey]
 
@@ -38,7 +38,7 @@ def part_1(current_monkey, monkey_dict, num_monkeys):
         return part_1(left_monkey, monkey_dict, num_monkeys) // part_1(right_monkey, monkey_dict, num_monkeys)
 
 
-def get_num_monkeys(monkey_dict):
+def get_num_monkeys(monkey_dict: dict[str, int | list[str]]) -> list[str]:
     num_monkeys = list()
     for monkey, monkey_instruction in monkey_dict.items():
         if isinstance(monkey_instruction, int):
@@ -47,7 +47,8 @@ def get_num_monkeys(monkey_dict):
     return num_monkeys
 
 
-def part_2_correction(monkey_dict: dict, num_monkeys: list):
+def part_2_correction(monkey_dict: dict[str, int | list[str]], num_monkeys: list[str]) -> \
+        tuple[dict[str, int | list[str]], list[str]]:
     monkey_dict["root"][1] = "="
     monkey_dict["humn"] = 3_296_135_418_820
 

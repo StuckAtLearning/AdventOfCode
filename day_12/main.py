@@ -1,10 +1,8 @@
 import ReadFileFunctions as RFF
-from anytree import Node, RenderTree
 from collections import defaultdict, deque
-from typing import List, Tuple, Union
 
 
-def find_point(input_list: List[str], target_point: str) -> Union[tuple[int, int], str]:
+def find_point(input_list: list[str], target_point: str) -> tuple[int, int] | str:
     for i in range(len(input_list)):
         for j in range(len(input_list[i])):
             if input_list[i][j] == target_point:
@@ -12,7 +10,7 @@ def find_point(input_list: List[str], target_point: str) -> Union[tuple[int, int
     return "input does not have target point"
 
 
-def get_neighbours(current_index: Tuple[int, int], dimensions: Tuple[int, int]) -> List[Tuple[int, int]]:
+def get_neighbours(current_index: tuple[int, int], dimensions: tuple[int, int]) -> list[tuple[int, int]]:
     x, y = current_index
     length, width = dimensions
     all_neighbours = []
@@ -33,7 +31,7 @@ def get_neighbours(current_index: Tuple[int, int], dimensions: Tuple[int, int]) 
     return all_neighbours
 
 
-def find_all_chr(input_list: List[str], target_point: str) -> List[Tuple[Tuple[int, int], 0]]:
+def find_all_chr(input_list: list[str], target_point: str) -> list[tuple[tuple[int, int], 0]]:
     all_points = list()
     for i in range(len(input_list)):
         for j in range(len(input_list[i])):
@@ -42,8 +40,8 @@ def find_all_chr(input_list: List[str], target_point: str) -> List[Tuple[Tuple[i
     return all_points
 
 
-def find_distance(start_index: Tuple[int, int], end_index: Tuple[int, int], input_list: List[str]) -> \
-        Union[int, "fucked up you dingus"]:
+def find_distance(start_index: tuple[int, int], end_index: tuple[int, int], input_list: list[str]) -> \
+        int | "fucked up you dingus":
     length, width = len(input_list), len(input_list[0])
     # start_indices = deque([(start_index, 0)])
     start_indices = deque(find_all_chr(input_list, "a"))

@@ -3,7 +3,7 @@ import functools
 import math
 
 
-def blue_print_passer(blue_print_dict):
+def blue_print_passer(blue_print_dict: dict[str, int | tuple[int, int]]) -> int:
 
     max_ore_needed = max(blue_print_dict["ore"], blue_print_dict["clay"], blue_print_dict["obs"][0], blue_print_dict["geo"][0])
     max_clay_needed = blue_print_dict["obs"][1]
@@ -107,7 +107,7 @@ def blue_print_passer(blue_print_dict):
     return calculate_geodes(0, 1, 0, False, 0, 0, False, 0, 0, False, 0, False)
 
 
-def part_1(input_dict: dict):
+def part_1(input_dict: dict[int, dict[str, int | tuple[int, int]]]) -> int:
     total_quality_level = list()
     for blue_print_num, blue_print_info in input_dict.items():
         # part 2 only:
@@ -131,7 +131,7 @@ def part_1(input_dict: dict):
     return math.prod(total_quality_level)
 
 
-def convert_file_to_dict(input_file_path):
+def convert_file_to_dict(input_file_path: str) -> dict[int, dict[str, int | tuple[int, int]]]:
     input_file = RFF.read_file_with_new_line(input_file_path)
 
     info_dict = dict()

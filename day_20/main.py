@@ -1,16 +1,14 @@
-import copy
-
 import ReadFileFunctions as RFF
 
 
-def convert_input_into_list(input_file_path):
+def convert_input_into_list(input_file_path: str) -> list[int]:
     input_file = RFF.read_file_with_new_line(input_file_path)
     input_file = [int(i) for i in input_file]
 
     return input_file
 
 
-def part_1(input_list):
+def part_1(input_list: list[int]) -> list[int]:
     # part 2 only:
     input_list = [i * 811589153 for i in input_list]
 
@@ -45,7 +43,7 @@ def part_1(input_list):
     return moved_list
 
 
-def calculate_sum(ordered_list: list):
+def calculate_sum(ordered_list: list[int]) -> int:
     zero_index = ordered_list.index(0)
     count_sum = 0
     count_sum += (ordered_list[(zero_index + 1000) % len(ordered_list)])

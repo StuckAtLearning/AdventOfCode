@@ -1,8 +1,7 @@
 import ReadFileFunctions as RFF
-from typing import Tuple
 
 
-def move_coord(current_coord: Tuple[int, int], check_coord: Tuple[int, int]) -> Tuple[int, int]:
+def move_coord(current_coord: tuple[int, int], check_coord: tuple[int, int]) -> tuple[int, int]:
     # both coordinates in the format of [x, y]
     # return current_coord is on the _ side of check_coord
     move_coord = [0, 0]
@@ -17,7 +16,7 @@ def move_coord(current_coord: Tuple[int, int], check_coord: Tuple[int, int]) -> 
     return (current_coord[0]+move_coord[0], current_coord[1]+move_coord[1])
 
 
-def check_neighbours(current_coord: Tuple[int, int], check_coord: Tuple[int, int]) -> bool:
+def check_neighbours(current_coord: tuple[int, int], check_coord: tuple[int, int]) -> bool:
     if (abs(current_coord[0] - check_coord[0]) < 2) and (abs(current_coord[1] - check_coord[1]) < 2):
         return True
     return False

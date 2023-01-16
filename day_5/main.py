@@ -1,8 +1,7 @@
 import ReadFileFunctions as RFF
-from typing import List, Dict, Tuple
 
 
-def parse_crates(crates_input_file_name: str) -> Dict[str, str]:
+def parse_crates(crates_input_file_name: str) -> dict[str, str]:
     crates_input_file = open(crates_input_file_name, "r")
     crates_info = crates_input_file.readlines()
 
@@ -21,7 +20,7 @@ def parse_crates(crates_input_file_name: str) -> Dict[str, str]:
     return crate_dict
 
 
-def parse_instructions(instruction_input_file_name: str) -> List[Tuple[int, str, str]]:
+def parse_instructions(instruction_input_file_name: str) -> list[tuple[int, str, str]]:
     instruction_file = RFF.read_file_with_new_line(instruction_input_file_name)
     instruction_list = list()
 
@@ -32,7 +31,7 @@ def parse_instructions(instruction_input_file_name: str) -> List[Tuple[int, str,
     return instruction_list
 
 
-def move_crates(crates: Dict[str, str], instructions: List[Tuple[int, str, str]]) -> str:
+def move_crates(crates: dict[str, str], instructions: list[tuple[int, str, str]]) -> str:
     for instruction in instructions:
         move_num, from_num, to_num = instruction[0], instruction[1], instruction[2]
         crates_moved = crates[from_num][:move_num]
