@@ -1,0 +1,39 @@
+/*fn create_an_evil_structure(angelic_structure) {
+    root = angelic_structure . pop_front
+    let evil_structure = {root: {'left': false, 'right': false}}
+
+    while angelic_structure {
+        child_node = angelic_structure . pop_front
+        parent_node = root
+        while parent_node in evil_structure {
+            
+        }
+
+    }
+}*/
+/*
+fn Point(x0, y0) {
+    let x = x0, y = y0
+
+    fn getX() -> x
+    fn getY() -> y
+
+    fn tostr() -> '(%d, %d)' % (x, y)
+    fn add(other) -> Point(x + other['getX'](), y + other['getY']())
+
+    return {'getX': getX, 'getY': getY, 'tostr': tostr, 'add': add}
+}*/
+
+fn Point(x0, y0) -> (x0, y0)
+fn getX(p) -> p[0]
+fn add(p, q) -> p + q
+fn tostr(p) -> str(p)
+
+let p = Point(1, 3)
+let q = Point(5, 6)
+
+print('p.x', p . getX)
+print('(p + q).tostr', p . add(q) . tostr)
+
+let perfectly_fine_structure = [0, -2, 1]
+//create_an_evil_structure(perfectly_fine_structure)
