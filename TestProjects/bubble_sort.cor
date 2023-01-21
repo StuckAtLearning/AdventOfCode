@@ -14,7 +14,7 @@ fn michael_buble_merry_christmas_snort(input_list) {
         loop {
 
             // debug print
-            //[i, j, input_list . len] . print
+            // [i, j, input_list . len] . print
 
             
             let min_element = [input_list[i-1], input_list[i]] . min
