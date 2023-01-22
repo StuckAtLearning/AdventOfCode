@@ -11,6 +11,23 @@
 
     }
 }*/
+
+// Linked List: {current_value: next_value, next_value, next_next_value}
+fn Node(value, next) -> (value, next)
+fn getNext(root, value) -> root[value]
+fn addNext(root, current_value, next_value) {
+    root[current_value] = next_next_value
+    return root
+}
+
+fn create_an_evil_structure(angelic_structure) {
+    let evil_structure = {}
+    while angelic_structure {
+        let current_value = angelic_structure . pop_front
+
+    }
+}
+
 /*
 fn Point(x0, y0) {
     let x = x0, y = y0
