@@ -31,24 +31,24 @@ def parse_int_only(file_info: list[list[str]], extra_parser: None | list[str]) -
     return parsed_input
 
 
-def parse_two_state_grid(file_info: list[list[str]], marker: str, start_index_one=False) -> \
-        tuple[set[tuple[int, int]], set[tuple[int, int]]]:
-    marked_coords = set()
-    unmarked_coords = set()
-    for y in range(len(file_info)):
-        for x in range(len(file_info[y])):
-            coord_x, coord_y = x, y
-            if start_index_one:
-                coord_x += 1
-                coord_y += 1
-            if file_info[y][x] == marker:
-                marked_coords.add((coord_x, coord_y))
-            else:
-                unmarked_coords.add((coord_x, coord_y))
-    return marked_coords, unmarked_coords
+# def parse_two_state_grid(file_info: list[list[str]], marker: str, start_index_one=False) -> \
+#         tuple[set[tuple[int, int]], set[tuple[int, int]]]:
+#     marked_coords = set()
+#     unmarked_coords = set()
+#     for y in range(len(file_info)):
+#         for x in range(len(file_info[y])):
+#             coord_x, coord_y = x, y
+#             if start_index_one:
+#                 coord_x += 1
+#                 coord_y += 1
+#             if file_info[y][x] == marker:
+#                 marked_coords.add((coord_x, coord_y))
+#             else:
+#                 unmarked_coords.add((coord_x, coord_y))
+#     return marked_coords, unmarked_coords
 
 
-def parse_multi_state_grid(file_info: list[list[str]], states: [str], start_index_one=False) -> \
+def parse_grid(file_info: list[list[str]], states: [str], start_index_one=False) -> \
         dict[str, set[tuple[int, int]]]:
     grid_coords = dict()
     for marker in states:
@@ -63,3 +63,5 @@ def parse_multi_state_grid(file_info: list[list[str]], states: [str], start_inde
                 if file_info[y][x] == marker:
                     grid_coords[marker].add((coord_x, coord_y))
     return grid_coords
+
+
