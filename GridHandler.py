@@ -1,6 +1,7 @@
 STRAIGHT_DIRECTION_OPERATION_LOOKUP = {'n': (0, 1), 's': (0, -1), 'w': (-1, 0), 'e': (1, 0)}
 DIAGONAL_DIRECTION_OPERATION_LOOKUP = STRAIGHT_DIRECTION_OPERATION_LOOKUP \
     .update({'nw': (-1, 1), 'ne': (1, 1), 'sw': (-1, -1), 'se': (1, -1)})
+SURROUNDING_SIDES = ['left', 'right', 'above', 'below', 'center']
 
 
 class GridHandler:
@@ -16,7 +17,6 @@ class GridHandler:
                 for x in range(self.get_left_boundary(), self.get_right_boundary() + 1)
             ) for y in range(self.get_top_boundary(), self.get_bottom_boundary() + 1)
         ])
-
         return output
 
     def get_left_boundary(self) -> int:
@@ -45,9 +45,6 @@ class GridHandler:
     def move_coord(current_coord: tuple[int, int], step: tuple[int, int]) -> tuple[int, int]:
         return current_coord[0] + step[0], current_coord[1] + step[1]
 
-    # def get_markers(self) -> set[str]:
-    #     return set(self.grid.keys())
-
     def convert_grid_to_coord_look_up(self) -> dict[tuple[int, int], str]:
         coord_look_up = dict()
         for marker, coords in self.grid.items():
@@ -55,11 +52,20 @@ class GridHandler:
                 coord_look_up[coord] = marker
         return coord_look_up
 
-    # def convert_coord_look_up_to_grid(self) -> dict[str, set[tuple[int, int]]]:
-    #     grid = {marker: set() for marker in self.get_markers()}
-    #     for coord, marker in self.coord_look_up.items():
-    #         grid[marker].add(coord)
-    #     return grid
+    def get_grid_markers(self) -> __dict__.keys[str, set[tuple[int, int]]]:
+        return self.grid.keys()
+
+    @staticmethod
+    def convert_coord_look_up_to_grid(coord_look_up: dict[tuple[int, int], str]) -> dict[str, set[tuple[int, int]]]:
+        grid = {marker: set() for marker in coord_look_up.values()}
+        for coord, marker in coord_look_up.items():
+            grid[marker].add(coord)
+        return grid
+
+    def print_coord_look_up(self, coord_look_up: dict[tuple[int, int], str]) -> None:
+        grid = self.convert_coord_look_up_to_grid(coord_look_up)
+        print(str(grid))
+        return None
 
     def within_boundary(self, current_coord: tuple[int, int]) -> bool:
         return (self.get_left_boundary() <= current_coord[0] <= self.get_right_boundary()) \
@@ -83,6 +89,3 @@ class GridHandler:
             marker = swapped_grid[coord]
             neighbours_marker[direction] = (coord, marker)
         return neighbours_marker
-
-    def get_surrounding_grid(self, direction: str, height: int, width: int):
-        return None
