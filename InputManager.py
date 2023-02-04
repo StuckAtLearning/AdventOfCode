@@ -2,28 +2,39 @@ import re
 from typing import Tuple, Set
 
 
-def read_file_with_double_new_line(file_name: str) -> list[list[str]]:
+def read_file_with_double_new_line(file_name: str, parse_int: bool = True) -> list[list[str | int]]:
     with open(file_name, 'r', encoding='utf-8') as file:
         data = file.read().split("\n\n")
-    data_list = [i.split("\n") for i in data]
+    if parse_int:
+        data_list = list()
+        for i in data:
+            input_line = i.split('\n')
+            grouped_data = list()
+            for j in input_line:
+                if j.isdigit():
+                    grouped_data.append(int(j))
+                else:
+                    int_input_line = parse_int_in_line(j)
+                    grouped_data.append(int_input_line)
+            data_list.append(grouped_data)
+    else:
+        data_list = [i.split("\n") for i in data]
     file.close()
     return data_list
 
 
-def read_file_with_new_line(file_name: str) -> list[str]:
+def read_file_with_single_new_line(file_name: str, parse_int: bool = True) -> list[str]:
     with open(file_name, 'r', encoding='utf-8') as file:
-        data = file.read().split("\n")
+        data_list = file.read().split("\n")
+    if parse_int:
+        data_list = [int(i) if i.isdigit() else parse_int_in_line(i) for i in data_list]
     file.close()
-    return data
+    return data_list
 
 
-def parse_int_only(file_info: list[list[str]], extra_parser: None | list[str]) -> dict[int, list[int]]:
-    parsed_input = dict()
-    for identifier in range(len(file_info)):
-        for info in file_info[identifier]:
-            parsed_info = [int(s) for s in re.findall(r'\d+', info)]
-            parsed_input[identifier + 1] = parsed_info
-    return parsed_input
+def parse_int_in_line(input_line: str) -> list[int]:
+    parsed_input_line = [int(i) for i in re.findall(r'\d+', input_line)]
+    return parsed_input_line
 
 
 def parse_grid(file_info: list[list[str]], states: [str], start_index_one=False) -> \
