@@ -1,18 +1,18 @@
 import InputManager as im
 
 
-def get_info_from_file(input_file_path):
+def get_info_from_file(input_file_path: str) -> str:
     info = im.read_file_with_single_new_line(input_file_path, False)
     return info[0]
 
 
-def part_1(info):
+def part_1(info: str) -> int:
     up = info.count('(')
     down = info.count(')')
     return up - down
 
 
-def part_2(info):
+def part_2(info: str) -> int:
     stair_num = [1 if i == '(' else -1 for i in info]
     stair_count = 1
     for i in range(len(stair_num)):
