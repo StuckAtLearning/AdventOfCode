@@ -1,5 +1,4 @@
 import re
-from typing import Tuple, Set
 
 
 def read_file_with_double_new_line(file_name: str, parse_int: bool = True) -> list[list[str | int]]:
