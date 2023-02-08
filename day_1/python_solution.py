@@ -2,7 +2,7 @@ import InputManager as im
 
 
 def get_info_from_file(input_file_path: str) -> str:
-    info = im.read_file_with_single_new_line(input_file_path, False)
+    info = im.read_file(input_file_path, False, False)
     return info[0]
 
 
