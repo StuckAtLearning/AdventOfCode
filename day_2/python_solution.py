@@ -1,6 +1,13 @@
 import InputManager as im
 
 
+def parse_input_file(file_name: str) -> list[list[int]]:
+    info = im.read_file(file_name)
+    dimensions_info = im.group_file_info_with_single_new_line(info)
+    parsed_dimensions_info = [im.parse_int_in_line(i) for i in dimensions_info]
+    return parsed_dimensions_info
+
+
 def get_surface_area(input_lines: list[list[int]]) -> int:
     surface_areas = [(lambda x, y, z: 2*x*y + 2*y*z + 2*x*z + min(x*y, y*z, x*z))(x, y, z) for [x, y, z] in input_lines]
     total_area = sum(surface_areas)
@@ -13,12 +20,16 @@ def get_ribbon_length(input_lines: list[list[int]]) -> int:
     return total_length
 
 
-if __name__ == "__main__":
-    dimensions = im.read_file("real_input.txt", parse_int=True)
+def get_answers():
+    dimensions = parse_input_file("day_2/real_input.txt")
     sa = get_surface_area(dimensions)
     print(sa)
 
     ribbon = get_ribbon_length(dimensions)
     print(ribbon)
+
+
+if __name__ == "__main__":
+    get_answers()
 
 

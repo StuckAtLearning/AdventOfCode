@@ -2,8 +2,8 @@ import InputManager as im
 
 
 def get_info_from_file(input_file_path: str) -> str:
-    info = im.read_file(input_file_path, False, False)
-    return info[0]
+    info = im.read_file(input_file_path)
+    return info
 
 
 def part_1(info: str) -> int:
@@ -21,7 +21,11 @@ def part_2(info: str) -> int:
             return i
 
 
-if __name__ == '__main__':
-    stairs_info = get_info_from_file('AdventOfCode2015/day_1/real_input.txt')
+def get_answers():
+    stairs_info = get_info_from_file('day_1/real_input.txt')
     print(part_1(stairs_info))
     print(part_2(stairs_info))
+
+
+if __name__ == '__main__':
+    get_answers()
