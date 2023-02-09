@@ -1,39 +1,27 @@
 import re
 
 
-def read_file(file_name: str, parse_int: bool = True, double_new_line: bool = False) -> \
-        list[str] | list[list[str | int]]:
-    if double_new_line:
-        with open(file_name, 'r', encoding='utf-8') as file:
-            data = file.read().split("\n\n")
-        if parse_int:
-            data_list = list()
-            for i in data:
-                input_line = i.split('\n')
-                grouped_data = list()
-                for j in input_line:
-                    if j.isdigit():
-                        grouped_data.append(int(j))
-                    else:
-                        int_input_line = parse_int_in_line(j)
-                        grouped_data.append(int_input_line)
-                data_list.append(grouped_data)
-        else:
-            data_list = [i.split("\n") for i in data]
-        file.close()
-        return data_list
+def read_file(file_name: str) -> str:
+    with open(file_name, 'r', encoding='utf-8') as file:
+        file_info = file.read()
+    return file_info
+
+
+def group_file_info_with_double_new_line(file_info: str) -> list[list[str]]:
+    return [i.split("\n") for i in file_info.split("\n\n")]
+
+
+def group_file_info_with_single_new_line(file_info: str) -> list[str]:
+    return file_info.split("\n")
+
+
+def parse_int_in_line(input_line: str, include_negatives: bool = False) -> list[int]:
+    if include_negatives:
+        pattern = r'-?\d+'
+        print(re.findall(pattern, input_line))
     else:
-        with open(file_name, 'r', encoding='utf-8') as file:
-            data_list = file.read().split("\n")
-        if parse_int:
-            data_list = [int(i) if i.isdigit() else parse_int_in_line(i) for i in data_list]
-        file.close()
-        return data_list
-
-
-def parse_int_in_line(input_line: str) -> list[int]:
-    parsed_input_line = [int(i) for i in re.findall(r'\d+', input_line)]
-    return parsed_input_line
+        pattern = r'\d+'
+    return [int(i) for i in re.findall(pattern, input_line)]
 
 
 def parse_grid(file_info: list[list[str]], states: [str], start_index_one=False) -> \
