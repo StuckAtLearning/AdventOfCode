@@ -41,3 +41,9 @@ def parse_grid(file_info: list[list[str]], states: [str], start_index_one=False)
     return grid_coords
 
 
+def parse_directions(line_info: str) -> list[tuple[int, int]]:
+    direction_look_up = {'>': (1, 0), '<': (-1, 0), '^': (0, 1), 'v': (0, -1)}
+    parsed_directions = list()
+    for i in line_info:
+        parsed_directions.append(direction_look_up[i])
+    return parsed_directions
