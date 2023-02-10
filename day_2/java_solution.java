@@ -13,6 +13,9 @@ public class Day2 {
 
         int wrappingPaperSA = getSurfaceArea(fileInfoInt);
         System.out.println(wrappingPaperSA);
+
+        int ribbonLength = getRibbonLength(fileInfoInt);
+        System.out.println(ribbonLength);
     }
 
     public static int getSurfaceArea(List<List<Integer>> presentDimensions) {
@@ -21,13 +24,28 @@ public class Day2 {
             int length = eachDimension.get(0);
             int height = eachDimension.get(1);
             int width = eachDimension.get(2);
-            int[] dimension = {length, height, width};
+            int[] sidesDimension = {length*height, length*width, height*width};
 
-            int sa = 2 * (length*height + length*width + height*width);
-            int fullSA = sa + Arrays.stream(dimension).min().getAsInt();
+            int sa = Arrays.stream(sidesDimension).sum() * 2;
+            int fullSA = sa + Arrays.stream(sidesDimension).min().getAsInt();
             eachSA.add(fullSA);
         }
 //        return eachSA.stream().mapToInt(Integer::valueOf).sum();
         return eachSA.stream().reduce(0, Integer::sum);
+    }
+
+    public static int getRibbonLength (List<List<Integer>> presentDimensions) {
+        List<Integer> eachLength = new ArrayList<>();
+        for (List<Integer> eachDimension: presentDimensions) {
+            int length = eachDimension.get(0);
+            int height = eachDimension.get(1);
+            int width = eachDimension.get(2);
+            int[] halfSidePerimeter = {length+height, length+width, height+width};
+
+            int partialLength = Arrays.stream(halfSidePerimeter).min().getAsInt() * 2;
+            int fullLength = partialLength + (length*height*width);
+            eachLength.add(fullLength);
+        }
+        return eachLength.stream().reduce(0, Integer::sum);
     }
 }
