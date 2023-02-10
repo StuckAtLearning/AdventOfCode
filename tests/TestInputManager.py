@@ -26,5 +26,12 @@ def test_parse_int_in_line():
     assert output_negative == [-3249, -723491, 3, -2, 4, 83279, 32487692, 34]
 
 
-def parse_grid():
+def test_parse_grid():
     assert True
+
+
+def test_parse_directions():
+    output_directions = ir.parse_directions(">>^v<<^<<>vv>")
+    assert output_directions == [(1, 0), (1, 0), (0, 1), (0, -1), (-1, 0), (-1, 0), (0, 1), (-1, 0), (-1, 0), (1, 0),
+                                 (0, -1), (0, -1), (1, 0)]
+
