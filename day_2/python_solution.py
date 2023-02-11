@@ -22,11 +22,9 @@ def get_ribbon_length(input_lines: list[list[int]]) -> int:
 
 def get_answers():
     dimensions = parse_input_file("day_2/real_input.txt")
-    sa = get_surface_area(dimensions)
-    print(sa)
-
-    ribbon = get_ribbon_length(dimensions)
-    print(ribbon)
+    part_1_answer = get_surface_area(dimensions)
+    part_2_answer = get_ribbon_length(dimensions)
+    return part_1_answer, part_2_answer
 
 
 if __name__ == "__main__":

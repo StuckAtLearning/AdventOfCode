@@ -1,22 +1,17 @@
-import io
-import sys
 from day_1 import python_solution as ps1
 from day_2 import python_solution as ps2
+from day_3 import python_solution as ps3
 
 
-def test_day_1():
-    captured_output = io.StringIO()
-    sys.stdout = captured_output
-    ps1.get_answers()
-    sys.stdout = sys.__stdout__
-    assert captured_output.getvalue() == "138\n1771\n"
+def test_answers():
+    day_1_answers = ps1.get_answers()
+    assert day_1_answers == (138, 1771)
 
+    day_2_answers = ps2.get_answers()
+    assert day_2_answers == (1586300, 3737498)
 
-def test_day_2():
-    captured_output = io.StringIO()
-    sys.stdout = captured_output
-    ps2.get_answers()
-    sys.stdout = sys.__stdout__
-    assert captured_output.getvalue() == "1586300\n3737498\n"
+    day_3_answers = ps3.get_answers()
+    assert day_3_answers == (2081)
+
 
 
