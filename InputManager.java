@@ -75,7 +75,11 @@ public class InputManager {
 //        return List.of(Direction.EAST);
 //    }
 
-    record Coordinate(int x, int y) {}
+    record Coordinate(int x, int y) {
+        Coordinate moveCoordinate(Coordinate step) {
+            return new Coordinate(this.x + step.x, this.y + step.y);
+        }
+    }
 
     public static List<Coordinate> parseDirections(String lineInfo) {
         Map<Character, Coordinate> directionLookUp = new HashMap<>();
