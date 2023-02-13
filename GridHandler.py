@@ -52,8 +52,8 @@ class GridHandler:
                 coord_look_up[coord] = marker
         return coord_look_up
 
-    def get_grid_markers(self) -> __dict__.keys[str, set[tuple[int, int]]]:
-        return self.grid.keys()
+    def get_grid_markers(self) -> set[str]:
+        return set(self.grid.keys())
 
     @staticmethod
     def convert_coord_look_up_to_grid(coord_look_up: dict[tuple[int, int], str]) -> dict[str, set[tuple[int, int]]]:

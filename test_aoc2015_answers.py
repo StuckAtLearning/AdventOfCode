@@ -11,7 +11,7 @@ def test_answers():
     assert day_2_answers == (1586300, 3737498)
 
     day_3_answers = ps3.get_answers()
-    assert day_3_answers == (2081)
+    assert day_3_answers == (2081, 2341)
 
 
 
