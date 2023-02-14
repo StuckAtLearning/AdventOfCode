@@ -1,6 +1,7 @@
 from day_1 import python_solution as ps1
 from day_2 import python_solution as ps2
 from day_3 import python_solution as ps3
+from day_4 import python_solution as ps4
 
 
 def test_answers():
@@ -12,6 +13,9 @@ def test_answers():
 
     day_3_answers = ps3.get_answers()
     assert day_3_answers == (2081, 2341)
+
+    day_4_answers = ps4.get_answers()
+    assert day_4_answers == (346386, 9958218)
 
 
 

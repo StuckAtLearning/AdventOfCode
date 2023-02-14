@@ -29,4 +29,4 @@ def get_answers():
 
 
 if __name__ == '__main__':
-    get_answers()
+    print(get_answers())
