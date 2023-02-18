@@ -1,103 +1,49 @@
-import java.io.IOException;
-import java.nio.MappedByteBuffer;
-import java.nio.file.Files;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class InputManager {
-    public static List<String> readFile(Path filePath) {
-        try {
-            return Files.readAllLines(filePath);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+public class InputManagerTest {
+    @Test
+    public void testReadFile() {
+        List<String> testFileInfo = InputManager.readFile(Path.of("tests/double_new_line_int_only.txt"));
+        String[] expectedOutputTemp = {"9686", "10178", "3375", "9638", "", "24919", "15983", "18045", "", "24872", "35761"};
+        List<String> expectedOutput = Arrays.asList(expectedOutputTemp);
+        Assertions.assertEquals(expectedOutput,testFileInfo);
     }
 
-
-    public static List<List<String>> groupFileWithDoubleNewLine(List<String> fileInfo) {
-        List<List<String>> groupedInfo = new ArrayList<>();
-        List<String> group = new ArrayList<>();
-        for (String info : fileInfo) {
-            if (info.isEmpty()) {
-                groupedInfo.add(group);
-                group = new ArrayList<>();
-            } else {
-                group.add(info);
-            }
-        }
-        groupedInfo.add(group);
-        return groupedInfo;
+    @Test
+    public void testGroupFileWithDoubleNewLine() {
+        String[] testLineInfoTemp = {"9686", "10178", "3375", "9638", "", "24919", "15983", "18045", "", "24872", "35761"};
+        List<List<String>> testLineInfo = InputManager.groupFileWithDoubleNewLine(Arrays.asList(testLineInfoTemp));
+        String[][] expectedOutputTemp = {{"9686", "10178", "3375", "9638"}, {"24919", "15983", "18045"}, {"24872", "35761"}};
+        List<List<String>> expectedOutput = Arrays.stream(expectedOutputTemp).map(Arrays::asList).toList();
+        Assertions.assertEquals(expectedOutput,testLineInfo);
     }
 
-
-    public static List<Integer> parseIntInLine(String info, boolean includeNegatives) {
-        Pattern intPattern;
-        if (includeNegatives) {
-            intPattern = Pattern.compile("-?\\d+");
-        }
-        else {
-            intPattern = Pattern.compile("\\d+");
-        }
-        Matcher inputInfo = intPattern.matcher(info);
-        List<String> parsedInfo = inputInfo.results().map(MatchResult::group).toList();
-        return parsedInfo.stream().map(Integer::valueOf).toList();
+    @Test
+    public void testParseIntInLine() {
+        List<Integer> testIntLinePositive = InputManager.parseIntInLine(" : 3249 weruhuiqwre723491'' \\ 3uh2h4 whiuh83279 32487692.34", false);
+        int[] expectedOutputTemp = {3249, 723491, 3, 2, 4, 83279, 32487692, 34};
+        List<Integer> expectedOutput = Arrays.stream(expectedOutputTemp).boxed().toList();
+        Assertions.assertEquals(expectedOutput, testIntLinePositive);
     }
 
-//    record Point(int x, int y)
-//    {
-//        Point add(Point other) {
-//            return new Point(this.x + other.x, this.y + other.y);
-//        }
-//
-//        Point rotate() {
-//            return new Point(this.y, -this.x);
-//        }
-//
-//        Point offset(Direction d) {}
-//    }
-
-//    enum Direction {
-//        NORTH, EAST, WEST, SOUTH;
-//
-//        int x() {}
-//        int y() {}
-//    }
-//
-//    List<Direction> foo1() {
-//        return List.of(Direction.EAST);
-//    }
-
-    record Coordinate(int x, int y) {
-        Coordinate moveCoordinate(Coordinate step) {
-            return new Coordinate(this.x + step.x, this.y + step.y);
-        }
-    }
-
-    public static List<Coordinate> parseDirections(String lineInfo) {
-        Map<Character, Coordinate> directionLookUp = new HashMap<>();
-
-        Coordinate goRightMovement = new Coordinate(1, 0);
-        Coordinate goLeftMovement = new Coordinate(-1, 0);
-        Coordinate goUpMovement = new Coordinate(0, 1);
-        Coordinate goDownMovement = new Coordinate(0, -1);
-
-        directionLookUp.put('>', goRightMovement);
-        directionLookUp.put('<', goLeftMovement);
-        directionLookUp.put('^', goUpMovement);
-        directionLookUp.put('v', goDownMovement);
-
-        List<Coordinate> parsedDirections = new ArrayList<>();
-        for (char c: lineInfo.toCharArray()) {
-            parsedDirections.add(directionLookUp.get(c));
-        }
-        return parsedDirections;
+    @Test
+    public void testParseDirections() {
+        List<InputManager.Coordinate> testParseInfo = InputManager.parseDirections(">>^v<<^<<>vv>");
+        List<InputManager.Coordinate> expectedOutput = List.of(
+                new InputManager.Coordinate(1, 0),
+                new InputManager.Coordinate(1, 0),
+                new InputManager.Coordinate(1, 0),
+                new InputManager.Coordinate(1, 0),
+                new InputManager.Coordinate(1, 0),
+                new InputManager.Coordinate(1, 0),
+                new InputManager.Coordinate(1, 0)
+        );
+        Assertions.assertEquals(expectedOutput, testParseInfo);
     }
 }
