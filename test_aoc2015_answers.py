@@ -2,6 +2,7 @@ from day_1 import python_solution as ps1
 from day_2 import python_solution as ps2
 from day_3 import python_solution as ps3
 from day_4 import python_solution as ps4
+from day_5 import python_solution as ps5
 
 
 def test_answers():
@@ -16,6 +17,9 @@ def test_answers():
 
     day_4_answers = ps4.get_answers()
     assert day_4_answers == (346386, 9958218)
+
+    day_5_answers = ps5.get_answers()
+    assert day_5_answers == (255, 55)
 
 
 
