@@ -8,19 +8,17 @@ VOWELS = ["a", "e", "i", "o", "u"]
 
 
 def check_allowed_substring_only(current_input: str) -> bool:
-    for i in DISALLOWED_SUBSTRING:
-        if i in current_input:
-            return False
-    return True
+    return not any(i in current_input for i in DISALLOWED_SUBSTRING)
 
 
 def check_double_letter(current_input: str) -> bool:
     groups = groupby(current_input)
     result = [(label, sum(1 for _ in group)) for label, group in groups]
-    for letter, occurrence in result:
-        if occurrence >= 2:
-            return True
-    return False
+    return any((_, occurrence) for _, occurrence in result if occurrence >= 2)
+    # for letter, occurrence in result:
+    #     if occurrence >= 2:
+    #         return True
+    # return False
 
 
 def check_vowels(current_input: str) -> bool:
