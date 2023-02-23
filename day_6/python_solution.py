@@ -33,7 +33,6 @@ def get_answers():
     follow_instructions(all_inputs)
 
 
-
 if __name__ == '__main__':
     get_answers()
 
