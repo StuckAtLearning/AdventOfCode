@@ -15,13 +15,12 @@ def group_file_info_with_single_new_line(file_info: str) -> list[str]:
     return file_info.split("\n")
 
 
-def parse_int_in_line(input_line: str, include_negatives: bool = False) -> list[int]:
+def parse_int_in_line(input_line: str, include_negatives: bool = False) -> tuple[int]:
     if include_negatives:
         pattern = r'-?\d+'
-        print(re.findall(pattern, input_line))
     else:
         pattern = r'\d+'
-    return [int(i) for i in re.findall(pattern, input_line)]
+    return tuple(int(i) for i in re.findall(pattern, input_line))
 
 
 def parse_grid(file_info: list[list[str]], states: [str], start_index_one=False) -> \

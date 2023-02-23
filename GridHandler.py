@@ -89,3 +89,7 @@ class GridHandler:
             marker = swapped_grid[coord]
             neighbours_marker[direction] = (coord, marker)
         return neighbours_marker
+
+    @staticmethod
+    def generate_grid_coords(width: int, length: int, start_index: int = 0) -> set[tuple[int, int]]:
+        return {(x, y) for x in range(start_index, width) for y in range(start_index, length)}
