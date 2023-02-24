@@ -27,12 +27,31 @@ def follow_instructions(all_inputs: list[str]) -> int:
     return Counter(lights_status.values())[1]
 
 
+def follow_brightness_settings(all_inputs: list[str]) -> int:
+    lights_status = {coord: 0 for coord in gh.GridHandler.generate_grid_coords(1000, 1000)}
+    for instruction in all_inputs:
+        coords = im.parse_int_in_line(instruction)
+        target_lights = get_lights(coords)
+        if "toggle" in instruction:
+            new_status = 2
+        elif "on" in instruction:
+            new_status = 1
+        else:
+            new_status = -1
+        for light in target_lights:
+            lights_status[light] += new_status
+            lights_status[light] = 0 if lights_status[light] < 0 else lights_status[light]
+    return sum(lights_status.values())
+
+
 def get_answers():
     input_file = im.read_file("day_6/real_input.txt")
     all_inputs = im.group_file_info_with_single_new_line(input_file)
-    follow_instructions(all_inputs)
+    part_1_answer = follow_instructions(all_inputs)
+    part_2_answer = follow_brightness_settings(all_inputs)
+    return part_1_answer, part_2_answer
 
 
 if __name__ == '__main__':
-    get_answers()
+    print(get_answers())
 
