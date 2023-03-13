@@ -1,12 +1,14 @@
 import InputManager as im
 
 
-def parse_wire_info(all_inputs: list[str]) -> tuple[tuple[str, ...]]:
-    return tuple([tuple(i.replace(' -> ', ' ').replace('NOT', '0 NOT').split(' ')) for i in all_inputs])
+def parse_wire_info(all_inputs: list[str]) -> dict[str, tuple[str]]:
+    wire_info = [tuple(i.replace(' -> ', ' ').replace('NOT', '0 NOT').split(' ')) for i in all_inputs]
+    parsed_info = {info[-1]: tuple(info[:-1]) for info in wire_info}
+    return parsed_info
 
 
 # Let's start with pseudocode, shall we? Is this what you want Eric?
-# We first have a target wire we want to know the value of. This is "a" in our case.
+# We first have a target wire we want to know the value of. This is "a" in our case. We use dictionary. idk if it works.
 # We then have a iterable instructions that is not in particular order.
 # We know "lx" is assigned to "a", so now we need to know what value "lx" has.
 # We find out what was assigned to "lx", eventually we will come across int values.
@@ -20,30 +22,9 @@ def parse_wire_info(all_inputs: list[str]) -> tuple[tuple[str, ...]]:
 # Well okay I tried, and that was a failure, just like me.
 
 
-def get_wire_value(parsed_wire_info: tuple[tuple[str, ...]], wire_name: str) -> int:
-    for instruction in parsed_wire_info:
-        if len(instruction) == 2:
-            if wire_name == instruction[1]:
-                if instruction[0].isdigit():
-                    return int(instruction[0])
-                return get_wire_value(parsed_wire_info, instruction[0])
-            continue
-        else:
-            left, op, right, assign = instruction
-            if not left.isdigit():
-                left = get_wire_value(parsed_wire_info, left)
-            if not right.isdigit():
-                right = get_wire_value(parsed_wire_info, right)
-            if op == "AND":
-                return int(left) & int(right)
-            elif op == "OR":
-                return int(left) | int(right)
-            elif op == "RSHIFT":
-                return int(left) >> int(right)
-            elif op == "LSHIFT":
-                return int(left) << int(right)
-            elif op == "NOT":
-                return ~int(right) & 65535
+def get_value(parsed_wire_info: tuple[tuple[str, ...]], wire_name: str) -> int:
+
+
 
 
 def get_answers():
