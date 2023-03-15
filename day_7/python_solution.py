@@ -6,21 +6,6 @@ def parse_wire_info(all_inputs: list[str]) -> dict[str, tuple[str]]:
     return {info[-1]: tuple(info[:-1]) for info in wire_info}
 
 
-# Let's start with pseudocode, shall we? Is this what you want Eric?
-# We first have a target wire we want to know the value of. This is "a" in our case. We use dictionary. idk if it works.
-# We then have a iterable instructions that is not in particular order.
-# We know "lx" is assigned to "a", so now we need to know what value "lx" has.
-# We find out what was assigned to "lx", eventually we will come across int values.
-# Ok so the strategy is kind of like finding what wires are connected to "a" and calculate the values.
-# To do that, we first loop through the instructions and find any instruction that has to do with "a";
-# Then, we need to loop through the instructions again to find instructions that has second degree connection with "a";
-# We can probably do this recursively to torture ourselves; until we reach all number assigning instructions.
-# Problem: what if "a" is changed after it was assigned?
-# Anyway, ignore that for now: can we somehow follow the instructions backwards to calculate "a"?
-# We can probably do that with the recursive step earlier?
-# Well okay I tried, and that was a failure, just like me.
-
-
 def get_value(parsed_wire_info: dict[str, tuple[str]], target_wire_name: str) -> int:
     wire_instruction = parsed_wire_info[target_wire_name]
     if len(wire_instruction) == 1:
@@ -29,6 +14,7 @@ def get_value(parsed_wire_info: dict[str, tuple[str]], target_wire_name: str) ->
             return int(wire_instruction[0])
         return get_value(parsed_wire_info, wire_instruction[0])
 
+    # note to self: change the assignment below because it is ugly.
     left, op, right = wire_instruction
     if not left.isdigit():
         left = get_value(parsed_wire_info, left)
