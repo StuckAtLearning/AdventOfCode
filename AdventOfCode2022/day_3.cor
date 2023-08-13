@@ -1,0 +1,10 @@
+fn E(g) -> if g == to_lower(g) then (g . ord)-96 else (g . ord)-38
+
+'day_3_input.txt' . read_text . split('\n') 
+  . map(fn(g) -> g[:g.len.(/2)] . set . intersect(g[g.len.(/2):] . set) . pop)
+  . map(E) . sum . print
+
+'day_3_input.txt' . read_text . split('\n')
+  . group_by(3) . map(fn(g) -> g . map(fn(h) -> h . set))
+  . map(fn(g) -> (g . pop . intersect(g . pop)) . intersect(g . pop) . pop)
+  . map(E) . sum . print

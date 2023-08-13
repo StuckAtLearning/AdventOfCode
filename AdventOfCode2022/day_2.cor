@@ -24,10 +24,8 @@ let rps_lookup_real = {
     'C Z': 6 + 1 
 }
 
-'day_2_input.txt' . read_text . split ('\n')
-    // part 1
-    // . map(fn(g) -> rps_lookup[g]) . sum . print
-    // part 2
-    . map(fn(g) -> rps_lookup_real[g]) . sum . print
     
-
+"day_2_input.txt" . read_text . split('\n')
+  . map(fn(x) -> (rps_lookup[x], rps_lookup_real[x]))
+  . reduce(+)
+  . map print
