@@ -1,4 +1,4 @@
-import InputManager as im
+from AOCH import InputManager as im
 
 
 def parse_input_file(file_name: str) -> list[list[int]]:

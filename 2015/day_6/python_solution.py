@@ -1,5 +1,4 @@
-import InputManager as im
-import GridHandler as gh
+from AOCH import GridHandler as gh, InputManager as im
 from collections import Counter
 
 

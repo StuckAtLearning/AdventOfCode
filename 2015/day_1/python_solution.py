@@ -1,4 +1,4 @@
-import InputManager as im
+from AOCH import InputManager as im
 
 
 def get_info_from_file(input_file_path: str) -> str:

@@ -1,5 +1,5 @@
-import InputManager as im
-from GridHandler import GridHandler as gh
+from AOCH import InputManager as im
+from AOCH.GridHandler import GridHandler as gh
 
 
 def parse_input_path_info(input_file_path: str) -> str:

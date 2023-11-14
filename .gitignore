@@ -1,4 +1,6 @@
 .DS_Store
-.idea/
-__pycache__/
+.idea
+AOCH/tests/__pycache__
+__pycache__
+tests.pytest_cache
 venv/

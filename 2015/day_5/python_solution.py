@@ -1,5 +1,5 @@
 from itertools import groupby
-import InputManager as im
+from AOCH import InputManager as im
 import string
 import re
 

@@ -1,4 +1,4 @@
-import InputManager as im
+from AOCH import InputManager as im
 
 
 def parse_wire_info(all_inputs: list[str]) -> dict[str, tuple[str]]:
