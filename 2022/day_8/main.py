@@ -1,7 +1,5 @@
 import ReadFileFunctions as RFF
-import HelperFunctions as HF
 import numpy as np
-from typing import Tuple, List
 
 
 def part_1(input_file_path: str) -> tuple[int, int]:

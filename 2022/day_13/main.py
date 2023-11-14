@@ -1,5 +1,3 @@
-import itertools
-
 import ReadFileFunctions as RFF
 import ast
 import functools

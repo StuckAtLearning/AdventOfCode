@@ -1,6 +1,4 @@
 import ReadFileFunctions as RFF
-import copy
-import ast
 import itertools
 import functools
 
