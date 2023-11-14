@@ -1,0 +1,11 @@
+// part 1: 
+'day_1_input.txt' . read_text . split ('\n\n')
+    . map(fn(g) -> g . split('\n') . map(int) . sum)
+    . max
+    . print
+
+// part 2:
+'day_1_input.txt' . read_text . split ('\n\n') 
+    . map(fn(g) -> g . split('\n') . map(int) . sum)
+    . sort . [-3:] . sum
+    . print

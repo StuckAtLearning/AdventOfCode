@@ -22,7 +22,7 @@ def get_input_position(info: str) -> int:
 
 
 def get_answers():
-    stairs_info = get_info_from_file('day_1/real_input.txt')
+    stairs_info = get_info_from_file('day1/real_input.txt')
     part_1_answer = get_floor_num(stairs_info)
     part_2_answer = get_input_position(stairs_info)
     return part_1_answer, part_2_answer
