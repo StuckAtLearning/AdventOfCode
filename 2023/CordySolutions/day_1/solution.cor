@@ -1,22 +1,27 @@
-// part 1: 
-'real_input.txt' . read_text . split ('\n')
-    . map(fn(g) -> g . filter(fn(x) -> (ord(x) <= 57) and (ord(x) >= 48)))
-    . map(fn(g) -> (g[0] + g[-1]).eval) . sum
-    . print
+fn calibrate_number(input) {
+    input
+    . map(fn(n) -> n . filter(fn(c) -> (ord(c) <= 57) and (ord(c) >= 48)))
+    . map(fn(n) -> (n[0] + n[-1]).eval) . sum
+}
 
-// part 2:
-let number_lookup = {'one': 'o1e', 'two': 't2o', 'three': 't3e', 'four': 'f4r', 'five': 'f5e', 'six': 's6x', 'seven': 's7n', 
-    'eight': 'e8t', 'nine': 'n9n', 'zero': 'z0o'};
-'real_input.txt' . read_text . split ('\n')
-    . map(fn(g) {
-        let temp = g
+fn main() {
+    let input = 'real_input.txt' . read_text . split ('\n') 
+    
+    // part 1: 
+    input . calibrate_number . print
+
+    // part 2:
+    let number_lookup = {'one': 'o1e', 'two': 't2o', 'three': 't3e', 'four': 'f4r', 'five': 'f5e', 'six': 's6x', 'seven': 's7n', 
+        'eight': 'e8t', 'nine': 'n9n', 'zero': 'z0o'};
+        
+    input
+    . map(fn(n) {
         for key, value in number_lookup {
-            if key in temp {
-                temp = temp . replace(key, value)
-            }
+            n .= replace(key, value)
         }
-        return temp
+        return n
     })
-    . map(fn(g) -> g . filter(fn(x) -> (ord(x) <= 57) and (ord(x) >= 48)))
-    . map(fn(g) -> (g[0] + g[-1]).eval) . sum
-    . print
+    . calibrate_number . print
+}
+
+main()

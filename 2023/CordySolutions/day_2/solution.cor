@@ -1,20 +1,14 @@
 fn parse_gane_info(input_file) {
     let parsed_game_info = dict()
-    let game_info = input_file . read_text . split ('\n') . map(split(': '))
+    let game_info = input_file . read_text . split('\n') . map(split(': '))
 
     for game_id, cube_info in game_info {
-        let game_id_num = game_id . split(' ') . [-1] . int
-        parsed_game_info[game_id_num] = []
+        let _, game_id_num = game_id . split(' ')
 
-        for each_set in cube_info . split('; ') {
-            let current_set = dict()
-            let cubes = each_set . split(', ')
-            for cube in cubes {
-                let cube_num, cube_colour = cube . split(' ')
-                current_set[cube_colour] = cube_num . int
-            }
-            parsed_game_info[game_id_num].push(current_set)
-        }
+        parsed_game_info[game_id_num . int] = cube_info 
+        . split('; ') . map(fn(game_set) -> game_set
+            . split(', ') . map(fn(cubes) -> cubes 
+                . split(' ') . (fn((count, color)) -> (color, int count))))
     }
     return parsed_game_info
 }
@@ -23,17 +17,9 @@ fn part_1(game_records) {
     let cubes_info = {'red': 12, 'green': 13, 'blue': 14}
     let possible_game_id_sum = 0
     for game_id, records in game_records {
-        let possible_game_flag = true
-        for record in records { // {'blue': 3, 'red': 4}
-            for colour, count in record {
-                if cubes_info[colour] < count {
-                    possible_game_flag = false
-                }
-            }
-        }
-        if possible_game_flag {
-            possible_game_id_sum += game_id
-        }
+        possible_game_id_sum += 
+            if records . map(fn(game_set) -> game_set . any(fn((colour, count)) -> cubes_info[colour] < count)) . all(!) 
+            then game_id else 0
     }
     return possible_game_id_sum
 }
@@ -42,11 +28,7 @@ fn part_2(game_records) {
     let possible_game_power = 0
     for _, records in game_records {
         let minimum_cube_info = {'red': 0, 'green': 0, 'blue': 0}
-        for record in records {
-            for colour, count in record {
-                minimum_cube_info[colour] max= count
-            }
-        }
+        records . map(fn(game_set) -> game_set . map(fn((colour, count)) -> minimum_cube_info[colour] max= count))
         possible_game_power += (minimum_cube_info . values) . reduce(*)
     }
     return possible_game_power
