@@ -1,0 +1,93 @@
+fn parse_engine(input_file) {
+    let input = input_file . read_text . split ('\n') . map(fn(x) -> x . split(''))
+    return input
+}
+
+fn get_neighbours(row, column) {
+    let n = (row-1, column)
+    let s = (row+1, column)
+    let w = (row, column-1)
+    let e = (row, column+1)
+    let nw = (row-1, column-1)
+    let sw = (row+1, column-1)
+    let ne = (row-1, column+1)
+    let se = (row+1, column+1)
+
+    return [n, s, w, e, nw, sw, ne, se]
+}
+
+fn get_number(row, start_c, grid) {
+    let left_c = start_c
+    while (left_c-1 >= 0) and (grid[row][left_c-1].search('\d')) {
+        left_c -= 1
+    }
+    let right_c = start_c
+    while (right_c+1 < len(grid[row])) and (grid[row][right_c+1].search('\d')) {
+        right_c += 1
+    }
+    return (left_c, right_c)
+}
+
+fn part_1(input) {
+    let engine_sum = 0
+    let included_numbers = set()
+    for row in range(len(input)-1) {
+        for column in range(len(input[row])-1) {
+            let center = input[row][column]
+            if center . search('[^.\d]') { 
+                let neighbours = get_neighbours(row, column)
+
+                for neighbour in neighbours {
+                    let r, c = neighbour
+                    if (neighbour not in included_numbers) and (input[r][c]. search('\d')) {
+                        let start_c, end_c = get_number(r, c, input)
+                        engine_sum += input[r][start_c:end_c+1] . reduce(+) . int
+                        // how to write this into map?
+                        for i in range(start_c, end_c+1) {
+                            included_numbers.push((r, i))
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return engine_sum
+}
+
+fn part_2(input) {
+    let gear_ratio_sum = 0
+    let included_numbers = set()
+    for row in range(len(input)-1) {
+        for column in range(len(input[row])-1) {
+            let center = input[row][column]
+            if center == '*' { 
+                let neighbours = get_neighbours(row, column)
+
+                let surrounding_numbers = set()
+                for neighbour in neighbours {
+                    let r, c = neighbour
+                    if (neighbour not in included_numbers) and (input[r][c]. search('\d')) {
+                        let start_c, end_c = get_number(r, c, input)
+                        surrounding_numbers.push(input[r][start_c:end_c+1] . reduce(+) . int)
+                        // how to write this into map?
+                        for i in range(start_c, end_c+1) {
+                            included_numbers.push((r, i))
+                        }
+                    }
+                }
+                if len(surrounding_numbers) == 2 {
+                    gear_ratio_sum += surrounding_numbers . reduce(*)
+                }
+            }
+        }
+    }
+    return gear_ratio_sum
+}
+
+fn main() {
+    let input = parse_engine('real_input.txt')
+    part_1(input) . print
+    part_2(input) . print
+}
+
+main()
