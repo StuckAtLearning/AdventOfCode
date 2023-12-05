@@ -1,0 +1,30 @@
+fn parse_game(input_file) -> read_text input_file
+    . split ('\n')
+    . map(split(': '))
+    . map(fn((_, numbers)) -> numbers
+        . split('\ \| ')
+        . map(search('\d+'))
+    )
+    . map(fn((mine, win)) -> (mine . set) & (win . set) . len)
+
+fn part_1(input) -> input . map(fn(x) -> 1 << (x-1)) . sum
+
+fn part_2(input) {
+    let count = 0
+    let cards = input . map(fn(x) -> (1, x))
+    for game_num, (card_num, win_num) in cards.enumerate {
+        for i in win_num.range {
+            cards[game_num+i+1][0] += card_num
+        }
+        count += card_num
+    }
+    return count
+}
+
+fn main() {
+    let input = parse_game('test_input.txt')
+    part_1(input) . print
+    part_2(input) . print
+}
+
+main()
