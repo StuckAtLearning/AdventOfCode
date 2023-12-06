@@ -1,0 +1,141 @@
+fn parse_input(input_file) -> input_file . read_text 
+    . split ('\n\n') . map(fn(x) -> (x.split(': |\n'))[1:]
+        . map(split(' ')) . map(fn(y) -> y . map(int))
+    )
+
+// part 1
+fn find_location(seed, mappings) { // todo: rename this function
+    let start = seed
+    for mapping in mappings {
+        for dest_start, source_start, range_len in mapping {
+            if (start >= source_start) and (start <= source_start+range_len - 1) {
+                start = (start-source_start) + dest_start
+                break
+            }
+        }
+    }
+    return start
+}
+
+fn part_1(seeds, mappings) {
+    let min_seed = 10000000000
+    for seed in seeds {
+        min_seed min= find_location(seed, mappings)
+    }
+    return min_seed
+}
+
+// part 2
+fn get_mapping_ranges(mappings) {
+    let mapping_ranges = list()
+    for mapping in mappings {
+        let ranges = list()
+        for dest_start, source_start, range_len in mapping {
+            ranges.push((source_start, source_start+range_len-1, dest_start, dest_start+range_len-1, range_len))
+        }
+        mapping_ranges.push(ranges.sort)
+    }
+    return mapping_ranges
+}
+
+fn get_seed_ranges(seeds) {
+    let seed_ranges = list()
+    for seed_start, seed_range in seeds.group_by(2) {
+        let seed_range = (seed_start, seed_start+seed_range-1)
+        seed_ranges.push(seed_range)
+    }
+    return seed_ranges
+}
+
+fn get_new_seed_ranges(seed_ranges, one_mapping_ranges) {
+    // todo: only pass the first mapping into the function
+    let new_ranges = set()
+    for seed_start, seed_end in seed_ranges { // check overlap for each seed
+        for source_start, source_end, dest_start, dest_end, map_range_len in one_mapping_ranges { // for each mapping get possible overlap
+            if (seed_start > source_end) or (seed_end < source_start) { // don't have overlap
+                new_ranges.push((seed_start, seed_end)) // all seeds mapes to itself
+            }
+            elif (seed_start < source_start or seed_start <= source_start) 
+                    and (seed_end < source_end or seed_end <= source_end) { // seeds tail overlaps source head
+                new_ranges.push((seed_start, source_start-1)) // seeds head maps to itself
+                new_ranges.push((dest_start, dest_start+(seed_end-source_start))) // seeds tail maps to dest head
+            }
+            elif (seed_start > source_start or seed_start >= source_start) 
+                    and (seed_end > source_end or seed_end >= source_end) { // seeds head overlaps source tail
+                new_ranges.push((dest_end-(source_end-seed_start), dest_end)) // seeds head maps to dest end
+                new_ranges.push((source_end+1, seed_end)) // seeds tail maps to itself
+            }
+            elif (seed_start < source_start or seed_start <= source_start) 
+                    and (seed_end > source_end or seed_end >= source_end) { // seeds covers source
+                new_ranges.push((seed_start, source_start-1)) // seeds head maps to itself
+                new_ranges.push((dest_start, dest_end)) // seeds middle maps to dest
+                new_ranges.push((source_end+1, seed_end)) // seeds tail maps to itself
+            }
+            elif (seed_start > source_start or seed_start >= source_start) 
+                    and (seed_end < source_end or seed_end <= source_end) { // all seeds in source
+                new_ranges.push((dest_start, dest_end)) // all seeds maps to dest
+            }
+            else { // unmatched scenarios: should not be here
+                print('seed: ', seed_start, seed_end)
+                print('source: ',  source_start, source_end)
+            }
+        }
+    }
+    return new_ranges
+}
+
+fn part_2(seed_ranges, mapping_ranges) {
+    let new_ranges = seed_ranges
+    for i in range(mapping_ranges.len) {
+        new_ranges = get_new_seed_ranges(new_ranges, mapping_ranges[i])
+    }
+    return new_ranges
+}
+
+fn main() {
+    let input = parse_input('test_input.txt')
+    let (seeds), *mappings = input
+
+    // part_1(seeds, mappings) . print
+
+    //part 2
+    let mapping_ranges = get_mapping_ranges(mappings)
+    let seed_ranges = get_seed_ranges(seeds)
+    // let new_seed_ranges = get_new_seed_ranges(seed_ranges, mapping_ranges[0]) . print
+    let final_ranges = part_2(seed_ranges, mapping_ranges) . print
+    // let mapped_ranges = get_range_mappings(new_seed_ranges, mapping_ranges)
+    // mapped_ranges . print
+}
+
+main()
+
+
+// fn get_range_gaps(initial_seeds) {
+//     let range_gaps = list()
+//     let lower = 0
+//     let upper = 0
+//     for seed_start in initial_seeds {
+//         upper = seed_start
+//         range_gaps.push((lower, upper-1))
+//         lower = seed_start
+//     }
+//     return range_gaps
+// }
+
+// fn get_range_starts(mappings) {
+//     let range_start = list()
+//     for _, source_start, _ in mappings[0] {
+//         range_start.push(source_start)
+//     }
+//     return range_start
+// }
+
+// fn get_range_mappings(seeds, mappings) {
+//     let all_range_mappings = list()
+//     for seed_start, seed_range in seeds {
+//         let location_start = find_location(seed_start, mappings)
+//         let range_mappings = (seed_start, seed_start+seed_range, location_start, location_start+seed_range)
+//         all_range_mappings.push(range_mappings)
+//     }
+//     return all_range_mappings
+// }
