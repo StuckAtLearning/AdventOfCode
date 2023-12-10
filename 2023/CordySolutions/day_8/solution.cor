@@ -1,0 +1,25 @@
+fn parse_input(input_file) {
+    let instruction, network = input_file . read_text . split('\n\n')
+    network = network . split('\n')  . map(split(' = ')) . map(fn((start, dest)) -> (start, dest[1:-1].split(', ').vector))
+    return (instruction, network.dict)
+}
+
+fn part_1(instruction, network) {
+    let begin = 'AAA'
+    let step_count = 0
+
+    while begin != 'ZZZ' {
+        let instructor = instruction[step_count % len(instruction)]
+        begin = if instructor == 'L' then network[begin][0] else network[begin][1]
+        step_count += 1
+    }
+    return step_count
+}
+
+fn main() {
+    let instruction, network = parse_input('real_input.txt')
+    part_1(instruction, network) . print
+
+}
+
+main()

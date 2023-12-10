@@ -1,0 +1,65 @@
+fn parse_input(input_file) -> input_file . read_text 
+    . split ('\n') . map(split(' ')) . map(fn(x) -> x . map(int))
+
+fn get_diffs(input) {
+    let all_diffs = list()
+    for history in input {
+        let diffs = list()
+        // part 2 only:
+        let history = history.reverse
+        diffs.push(history)
+        let last_diff = [...history]
+        while !(last_diff.all(==0)) {
+            let current_diff = list()
+            for i in range(len(last_diff)-1) {
+                current_diff.push(last_diff[i+1]-last_diff[i])
+            }
+            diffs.push(current_diff)
+            last_diff = current_diff
+        }
+        all_diffs.push(diffs)
+    }
+    return all_diffs
+}
+
+fn predict_next_num(diffs) {
+    let next_num = 0
+    for diff in diffs {
+        next_num += diff[-1]
+    }
+    return next_num
+}
+
+fn predict_previous_num(diffs) {
+    let previous_num = 0
+    for diff in diffs {
+        previous_num = diff[0] - previous_num
+    }
+    return previous_num
+}
+
+fn part_1(input) {
+    let sum_values = 0
+    let all_diffs = get_diffs(input)
+    for diffs in all_diffs {
+        sum_values += predict_next_num(diffs)
+    }
+    return sum_values
+}
+
+fn part_2(input) {
+    let sum_values = 0
+    let all_diffs = get_diffs(input)
+    for diffs in all_diffs {
+        sum_values += predict_previous_num(diffs)
+    }
+    return sum_values
+}
+
+fn main() {
+    let input = parse_input('real_input.txt')
+    part_1(input) . print
+    // part_2(input) . print
+}
+
+main()

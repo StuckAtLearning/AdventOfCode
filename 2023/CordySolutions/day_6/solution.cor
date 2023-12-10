@@ -1,19 +1,19 @@
 // part 1
-// let test_input = [(7, 9), (15, 40), (30, 200)]
-// let real_input = [(58, 478), (99, 2232), (64, 1019), (69, 1071)]
+let test_input = [(7, 9), (15, 40), (30, 200)]
+let real_input = [(58, 478), (99, 2232), (64, 1019), (69, 1071)]
 
-// let all_num_ways = list()
-// for time, record in real_input {
-//     let num_ways = 0
-//     for i in range(time+1) {
-//         let way = i * (time-i) // speed * time
-//         if way > record {
-//             num_ways += 1
-//         }
-//     }
-//     all_num_ways.push(num_ways)
-// }
-// all_num_ways . reduce(*) . print
+let all_num_ways = list()
+for time, record in real_input {
+    let num_ways = 0
+    for i in range(time+1) {
+        let way = i * (time-i) // speed * time
+        if way > record {
+            num_ways += 1
+        }
+    }
+    all_num_ways.push(num_ways)
+}
+all_num_ways . reduce(*) . print
 
 
 // part 2
