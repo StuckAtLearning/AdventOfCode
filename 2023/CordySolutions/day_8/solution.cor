@@ -16,9 +16,37 @@ fn part_1(instruction, network) {
     return step_count
 }
 
+fn get_ghost_step(begin_step, instruction, network) {
+    let begin = begin_step
+    let step_count = 0
+
+    while begin[-1] != 'Z' {
+        let instructor = instruction[step_count % len(instruction)]
+        begin = if instructor == 'L' then network[begin][0] else network[begin][1]
+        step_count += 1
+    }
+    return step_count
+}
+
+fn part_2(instruction, network) {
+    let ghost_starts = list()
+    for key, _ in network {
+        if key[-1] == 'A' {
+            ghost_starts.push(key)
+        }
+    }
+
+    let ghost_steps_counts = list()
+    for ghost_start in ghost_starts {
+        ghost_steps_counts.push(get_ghost_step(ghost_start, instruction, network))
+    }
+    return lcm(ghost_steps_counts)
+}
+
 fn main() {
     let instruction, network = parse_input('real_input.txt')
     part_1(instruction, network) . print
+    part_2(instruction, network) . print
 
 }
 
