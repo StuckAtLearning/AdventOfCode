@@ -1,0 +1,251 @@
+fn parse_input(input_file) {
+    let parsed_input = input_file . read_text . split ('\n')
+    let pipes = dict()
+    for row in range(parsed_input.len) {
+        for column in range(parsed_input[row].len) {
+            pipes[(row, column)] = parsed_input[row][column]
+        }
+    }
+    return pipes
+}
+
+fn find_animal(pipes) {
+    for key, value in pipes {
+        if value == 'S' {
+            return key
+        }
+    }
+}
+
+fn find_loop(animal, pipes) {
+    let direction = (1, 0) // assuming facing south for input
+    let current = animal
+    let loop_path = [animal]
+
+    while true {
+        let next = current + direction
+        if next == animal {
+            return loop_path
+        }
+
+        if direction == (1, 0) { // facing south currently
+            if pipes[next] == '|' { // facing south next
+                loop_path.push(next)
+                current = next
+            }
+            elif pipes[next] == 'L' {
+                direction = (0, 1) // facing east next
+                loop_path.push(next)
+                current = next
+            }
+            elif pipes[next] == 'J' {
+                direction = (0, -1) // facing west next
+                loop_path.push(next)
+                current = next                
+            }
+        }
+        elif direction == (-1, 0) { // facing north currently
+            if pipes[next] == '|' { // facing north next
+                loop_path.push(next)
+                current = next
+            }
+            elif pipes[next] == 'F' {
+                direction = (0, 1) // facing east next
+                loop_path.push(next)
+                current = next
+            }
+            elif pipes[next] == '7' {
+                direction = (0, -1) // facing west next
+                loop_path.push(next)
+                current = next                
+            }
+        }
+        elif direction == (0, -1) { // facing west currently
+            if pipes[next] == '-' { // facing west next
+                loop_path.push(next)
+                current = next
+            }
+            elif pipes[next] == 'F' {
+                direction = (1, 0) // facing south next
+                loop_path.push(next)
+                current = next
+            }
+            elif pipes[next] == 'L' {
+                direction = (-1, 0) // facing north next
+                loop_path.push(next)
+                current = next                
+            }
+        }
+        elif direction == (0, 1) { // facing east currently
+            if pipes[next] == '-' { // facing east next
+                loop_path.push(next)
+                current = next
+            }
+            elif pipes[next] == '7' {
+                direction = (1, 0) // facing south next
+                loop_path.push(next)
+                current = next
+            }
+            elif pipes[next] == 'J' {
+                direction = (-1, 0) // facing north next
+                loop_path.push(next)
+                current = next                
+            }
+        }
+    }
+    return loop_path
+}
+
+fn get_orientation(loop_path, pipes) {
+    let degree = 0 
+    let direction = (1, 0) // assume from the first direction, left hand side is the inside
+    for i in loop_path {
+        if direction == (1, 0) { //facing south currently
+            if pipes[i] == 'L' { // turning left
+                direction = (0, 1) 
+                degree += 90
+            }
+            elif pipes[i] == 'J' { // turning right
+                direction = (0, -1) 
+                degree -= 90            
+            }
+        }
+        elif direction == (-1, 0) { // facing north currently
+            if pipes[i] == 'F' { // turning right
+                direction = (0, 1)
+                degree -= 90
+            }
+            elif pipes[i] == '7' { // turning left
+                direction = (0, -1) 
+                degree += 90
+            }
+        }
+        elif direction == (0, -1) { // facing west currently
+            if pipes[i] == 'F' {
+                direction = (1, 0) // turning left
+                degree += 90
+            }
+            elif pipes[i] == 'L' {
+                direction = (-1, 0) // turning right
+                degree -= 90   
+            }
+        }
+        elif direction == (0, 1) { // facing east currently
+            if pipes[i] == '7' { // turning right
+                direction = (1, 0) 
+                degree -= 90
+            }
+            elif pipes[i] == 'J' { // turning left
+                direction = (-1, 0)
+                degree += 90             
+            }
+        }
+    }
+    return degree > 0 // assuming facing south first, the inside is on the left
+}
+
+fn get_shadows(loop_path, pipes) { // check horizontal shadows (east is true, west is false)
+    // check all points bying walking west, if a pipe_tile is facing east (open and true), then this point is inside of the loop
+    let orientation = get_orientation(loop_path, pipes)
+    let shadow_direction = dict()
+    let direction = (1, 0) // MANUAL INPUT: assuming facing direction
+
+    for i in loop_path {
+        if direction == (1, 0) { // facing south currently
+            if pipes[i] == 'L' { // turning left, facing east
+                direction = (0, 1) 
+                shadow_direction[i] = true
+            }
+            elif pipes[i] == 'J' { // turning right, facing east
+                direction = (0, -1) 
+                shadow_direction[i] = true        
+            }
+            elif pipes[i] == '|' {
+                shadow_direction[i] = true // todo: not sure, for now facing east
+            }
+        }
+        elif direction == (-1, 0) { // facing north currently
+            if pipes[i] == 'F' { // turning right
+                direction = (0, 1)
+                shadow_direction[i] = false
+            }
+            elif pipes[i] == '7' { // turning left
+                direction = (0, -1) 
+                shadow_direction[i] = false
+            }
+            elif pipes[i] == '|' {
+                shadow_direction[i] = false // todo: not sure, for now facing west
+            }
+        }
+        elif direction == (0, -1) { // facing west currently
+            if pipes[i] == 'F' {
+                direction = (1, 0) // turning left
+                shadow_direction[i] = true
+            }
+            elif pipes[i] == 'L' {
+                direction = (-1, 0) // turning right
+                shadow_direction[i] = false
+            }
+        }
+        elif direction == (0, 1) { // facing east currently
+            if pipes[i] == '7' { // turning right
+                direction = (1, 0) 
+                shadow_direction[i] = true
+            }
+            elif pipes[i] == 'J' { // turning left
+                direction = (-1, 0)      
+                shadow_direction[i] = false  
+            }
+        }
+    }
+
+    if orientation {
+        return shadow_direction
+    }
+    else {
+        return shadow_direction . map(fn((key, value)) -> (key, !value)) . dict
+    }
+}
+
+fn part_2(shadows, pipes, loop_path) {
+    let enclosed_count = 0
+    let enclosed_tiles = set()
+    for coord, _ in pipes {
+        if coord not in loop_path {
+            let left = coord
+            while left[1] > 0 {
+                left = left + (0, -1)
+                if left in enclosed_tiles { // already inside
+                    enclosed_count += 1
+                    enclosed_tiles.push(coord)
+                    break
+                }
+                elif left in shadows { // hits one of the pipes
+                    if shadows[left] {
+                        enclosed_count += 1
+                        enclosed_tiles.push(coord)
+                    }
+                    break
+                }
+            }
+        }
+    }
+    return enclosed_count
+}
+
+fn part_1(loop_path) -> (loop_path.len) / 2
+
+fn main() {
+    let pipes = parse_input('real_input.txt')
+    let animal = find_animal(pipes)
+
+    let loop_path = find_loop(animal, pipes)
+    part_1(loop_path) . print
+
+    let shadows = get_shadows(loop_path, pipes)
+    shadows[animal] = true // MANUAL INPUT: guessing
+    
+    part_2(shadows, pipes, loop_path) . print
+}
+
+main()
