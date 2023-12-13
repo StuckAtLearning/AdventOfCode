@@ -2,8 +2,10 @@ fn parse_input(input_file) {
     let input = input_file . read_text . split('\n') . map(split(''))
     let expanded_input = list()
 
+    let empty_rows = list()
     for i in range(input.len) {
         if '#' not in input[i] {
+            empty_rows.push(i)
             expanded_input.push(['.'] * (input[i].len))
         }
         expanded_input.push(input[i]) 
@@ -22,21 +24,24 @@ fn parse_input(input_file) {
             empty_columns.push(c)
         }
     }
-
     for insert_index, column in enumerate(empty_columns) {
         for r in range(expanded_input.len) {
             expanded_input[r].insert(column+insert_index, '.')
         }
     }
 
+    let coords = get_coords(expanded_input)
+    return (coords, empty_rows, empty_columns)
+}
+
+fn get_coords(grid) {
     let coords = dict()
-    for r in range(expanded_input.len) {
-        for c in range(expanded_input[r].len) {
-            coords[(r, c)] = expanded_input[r][c]
+    for r in range(grid.len) {
+        for c in range(grid[r].len) {
+            coords[(r, c)] = grid[r][c]
         }
     }
-    //expanded_input . map(fn(x) -> x . join('') . print)
-    return (expanded_input.len, expanded_input[0].len, coords)
+    return coords
 }
 
 fn get_neighbours(a_coord, length, width) {
@@ -44,44 +49,46 @@ fn get_neighbours(a_coord, length, width) {
     return [(r-1, c), (r+1, c), (r, c-1), (r, c+1)] . filter(fn((a, b)) -> a>=0 and b>=0 and a<length and b<width)
 }
 
-fn get_shortest_path(a, b, length, width) { // you can do this noelle!
-    let queue = [a]
-    let seen = set()
-    let path = list()
-
-    // well time to write a BFS I guess... may the lord and the force and alex be with me...
-    while queue {
-        let current = queue.pop()
-        path.push(current)
-        if current == b {
-            return path
-        }
-        let neighbours = get_neighbours(current, length, width)
-        for neighbour in neighbours {
-            if neighbour not in seen {
-                queue.push(neighbour)
-                seen.push(neighbour)
-            }
-        }
-    }
-}
+fn find_manhatten_distance(a, b) -> abs(a[0]-b[0]) + abs(a[1]-b[1])
 
 fn find_pairs(coords) -> coords . map(fn((key, value)) -> if value == '#' then key else false) . filter(!=false) . combinations(2)
 
-fn part_1(galaxy_pairs, length, width) {
+fn part_1(galaxy_pairs) {
     let sum_lengths = 0
     for each_pair in galaxy_pairs {
-        print(each_pair)
-        print(get_shortest_path(each_pair[0], each_pair[1], length, width))
-        sum_lengths += (get_shortest_path(each_pair[0], each_pair[1], length, width) . len)-1
+        sum_lengths += find_manhatten_distance(each_pair[0], each_pair[1])
     }
     return sum_lengths
 }
 
+fn part_2(galaxy_pairs, empty_rows, empty_columns) {
+    let sum_lengths = 0
+    for a, b in galaxy_pairs {
+        sum_lengths += find_manhatten_distance(a, b)
+        for r in empty_rows {
+            if (a[0]<r and r<b[0]) or (b[0]<r and r<a[0]) {
+                sum_lengths += 999999
+            }
+        }
+        for c in empty_columns {
+            if (a[1]<c and c<b[1]) or (b[1]<c and c<a[1]) {
+                sum_lengths += 999999
+            }
+        }
+    }
+    return sum_lengths    
+}
+
 fn main() {
-    let length, width, coords = parse_input('test_input.txt')
+    // part 1
+    let coords, empty_rows, empty_columns = parse_input('real_input.txt')
     let galaxy_pairs = find_pairs(coords)
-    part_1(galaxy_pairs, length, width) . print
+    part_1(galaxy_pairs) . print
+
+    // part 2
+    let original_grid = 'real_input.txt' . read_text . split('\n') . map(split(''))
+    let original_galaxy_pairs = find_pairs(get_coords(original_grid))
+    part_2(original_galaxy_pairs, empty_rows, empty_columns) . print
 }
 
 main()
