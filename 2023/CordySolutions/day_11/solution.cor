@@ -1,0 +1,87 @@
+fn parse_input(input_file) {
+    let input = input_file . read_text . split('\n') . map(split(''))
+    let expanded_input = list()
+
+    for i in range(input.len) {
+        if '#' not in input[i] {
+            expanded_input.push(['.'] * (input[i].len))
+        }
+        expanded_input.push(input[i]) 
+    }
+
+    let empty_columns = list()
+    for c in range(expanded_input[0].len) {
+        let empty = true
+        for r in range(expanded_input.len) {
+            if expanded_input[r][c] == '#' {
+                empty = false
+                break
+            }
+        }
+        if empty {
+            empty_columns.push(c)
+        }
+    }
+
+    for insert_index, column in enumerate(empty_columns) {
+        for r in range(expanded_input.len) {
+            expanded_input[r].insert(column+insert_index, '.')
+        }
+    }
+
+    let coords = dict()
+    for r in range(expanded_input.len) {
+        for c in range(expanded_input[r].len) {
+            coords[(r, c)] = expanded_input[r][c]
+        }
+    }
+    //expanded_input . map(fn(x) -> x . join('') . print)
+    return (expanded_input.len, expanded_input[0].len, coords)
+}
+
+fn get_neighbours(a_coord, length, width) {
+    let r, c = a_coord
+    return [(r-1, c), (r+1, c), (r, c-1), (r, c+1)] . filter(fn((a, b)) -> a>=0 and b>=0 and a<length and b<width)
+}
+
+fn get_shortest_path(a, b, length, width) { // you can do this noelle!
+    let queue = [a]
+    let seen = set()
+    let path = list()
+
+    // well time to write a BFS I guess... may the lord and the force and alex be with me...
+    while queue {
+        let current = queue.pop()
+        path.push(current)
+        if current == b {
+            return path
+        }
+        let neighbours = get_neighbours(current, length, width)
+        for neighbour in neighbours {
+            if neighbour not in seen {
+                queue.push(neighbour)
+                seen.push(neighbour)
+            }
+        }
+    }
+}
+
+fn find_pairs(coords) -> coords . map(fn((key, value)) -> if value == '#' then key else false) . filter(!=false) . combinations(2)
+
+fn part_1(galaxy_pairs, length, width) {
+    let sum_lengths = 0
+    for each_pair in galaxy_pairs {
+        print(each_pair)
+        print(get_shortest_path(each_pair[0], each_pair[1], length, width))
+        sum_lengths += (get_shortest_path(each_pair[0], each_pair[1], length, width) . len)-1
+    }
+    return sum_lengths
+}
+
+fn main() {
+    let length, width, coords = parse_input('test_input.txt')
+    let galaxy_pairs = find_pairs(coords)
+    part_1(galaxy_pairs, length, width) . print
+}
+
+main()
