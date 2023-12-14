@@ -1,0 +1,83 @@
+fn parse_input(input_file) -> input_file . read_text . split('\n\n') . map(split('\n'))
+
+fn get_horizontal_reflection_line(pattern) {
+    for horizontal_line in range(1, pattern.len) {
+        let top = pattern[:horizontal_line]
+        let bottom = pattern[horizontal_line:]
+
+        let comparison_range = min(top.len, bottom.len)
+        let mirrored_top = top[(top.len)-comparison_range:]
+        let mirrored_bottom = bottom[:comparison_range].reverse
+
+        if mirrored_top == mirrored_bottom {
+            return top.len
+        }
+    }
+    return false
+}
+
+fn part_1(input) {
+    let horizontal_top_count = list()
+    let vertical_left_count = list()
+    for pattern in input {
+        let count = get_horizontal_reflection_line(pattern)
+        if count {
+            horizontal_top_count.push(count)
+        }
+        else {
+            vertical_left_count.push(get_horizontal_reflection_line(zip(pattern)))
+        }
+    }
+    return (vertical_left_count.reduce(+)) + ((horizontal_top_count.map(*100)).reduce(+))
+}
+
+// part 2
+fn add_smudge(mirrored_top, mirrored_bottom) {
+    let smudge_count = 0
+    let comparisons = [mirrored_top, mirrored_bottom].zip
+    for each_comparison in comparisons {
+        smudge_count += each_comparison.zip.filter(fn((a,b)) -> a!=b).len
+    }
+    return smudge_count == 1
+}
+
+fn get_horizontal_reflection_line_with_smudge(pattern) {
+    for horizontal_line in range(1, pattern.len) {
+        let top = pattern[:horizontal_line]
+        let bottom = pattern[horizontal_line:]
+
+        let comparison_range = min(top.len, bottom.len)
+        let mirrored_top = top[(top.len)-comparison_range:]
+        let mirrored_bottom = bottom[:comparison_range].reverse
+
+        if add_smudge(mirrored_top, mirrored_bottom) {
+            return top.len
+        }
+    }
+    return false
+}
+
+fn part_2(input) {
+    let horizontal_top_count = list()
+    let vertical_left_count = list()
+    for pattern in input {
+        let count = get_horizontal_reflection_line_with_smudge(pattern)
+        if count {
+            horizontal_top_count.push(count)
+        }
+        else {
+            vertical_left_count.push(get_horizontal_reflection_line_with_smudge(zip(pattern)))
+        }
+    }
+    if vertical_left_count == [] {vertical_left_count = [0]}
+    if horizontal_top_count == [] {horizontal_top_count = [0]}
+    return (vertical_left_count.reduce(+)) + ((horizontal_top_count.map(*100)).reduce(+))
+}
+
+fn main() {
+    let input = parse_input('real_input.txt')
+    part_1(input) . print
+    part_2(input) . print
+}
+
+main()
