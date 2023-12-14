@@ -21,135 +21,182 @@ fn part_1(seeds, mappings) {
     let min_seed = 10000000000
     for seed in seeds {
         min_seed min= find_location(seed, mappings)
-        min_seed . print
+        min_seed
     }
     return min_seed
 }
 
 // part 2
-fn get_mapping_ranges(mappings) {
-    let mapping_ranges = list()
-    for mapping in mappings {
-        let ranges = list()
+
+// inversion of find_location
+fn find_seed_from_location(location, mappings) { // todo: rename this function
+    let end = location
+    //mappings.print
+    for mapping in mappings { // dest_start, source_start, range_len
+        //end.print
         for dest_start, source_start, range_len in mapping {
-            ranges.push((source_start, source_start+range_len-1, dest_start, dest_start+range_len-1))
-        }
-        mapping_ranges.push(ranges.sort)
-    }
-    return mapping_ranges
-}
-
-fn get_seed_ranges(seeds) {
-    let seed_ranges = list()
-    for seed_start, seed_range in seeds.group_by(2) {
-        let seed_range = (seed_start, seed_start+seed_range-1)
-        seed_ranges.push(seed_range)
-    }
-    return seed_ranges
-}
-
-fn get_new_seed_ranges(seed_ranges, one_mapping_ranges) {
-    let seen = set()
-    let new_ranges = set()
-    for seed_start, seed_end in seed_ranges { // check overlap for each seed
-        let overlap = true
-        // print('seed start and end: ', seed_start, seed_end)
-        // print('current mapping procesdure: ', one_mapping_ranges)
-        for source_start, source_end, dest_start, dest_end in one_mapping_ranges { // for each mapping get possible overlap
-            //print('current mappings: ', (source_start, source_end, dest_start, dest_end))
-            if ((seed_start > source_end) or (seed_end < source_start)) { // don't have overlap
-                //print('1')
-                overlap = false
-                continue
-            }
-            elif (seed_start > source_start or seed_start >= source_start) 
-                    and (seed_end < source_end or seed_end <= source_end) { // all seeds in source
-                new_ranges.push((dest_start+(seed_start-source_start), dest_end-(source_end-seed_end)-1)) // all seeds maps to dest
-                overlap = true
-                //print('5', (dest_start+(seed_start-source_start), dest_end-(source_end-seed_end)-1))
-                break
-            }
-            elif (seed_start < source_start or seed_start <= source_start) 
-                    and (seed_end < source_end or seed_end <= source_end) { // seeds tail overlaps source head
-                new_ranges.push((dest_start, dest_start+(seed_end-source_start))) // seeds tail maps to dest head
-                if ((seed_start, source_start-1) not in seen) {
-                    seed_ranges.push((seed_start, source_start-1)) // seeds head maps to itself
-                    seen.push((seed_start, source_start-1))
-                }
-                overlap = true
-                //print('2', (dest_start, dest_start+(seed_end-source_start)))
-            }
-            elif (seed_start > source_start or seed_start >= source_start) 
-                    and (seed_end > source_end or seed_end >= source_end) { // seeds head overlaps source tail
-                new_ranges.push((dest_end-(source_end-seed_start), dest_end)) // seeds head maps to dest end
-                if ((source_end+1, seed_end) not in seen) {
-                    seed_ranges.push((source_end+1, seed_end)) // seeds tail maps to itself
-                    seen.push((source_end+1, seed_end))
-                }
-                overlap = true
-                //print('3', (dest_end-(source_end-seed_start), dest_end))
-            }
-            elif (seed_start < source_start or seed_start <= source_start) 
-                    and (seed_end > source_end or seed_end >= source_end) { // seeds covers source
-                new_ranges.push((dest_start, dest_end)) // seeds middle maps to dest
-                if ((seed_start, source_start-1) not in seen) {
-                    seed_ranges.push((seed_start, source_start-1)) // seeds head maps to itself
-                    seen.push((seed_start, source_start-1))
-                }
-                if ((source_end+1, seed_end) not in seen) {
-                    seed_ranges.push((source_end+1, seed_end)) // seeds tail maps to itself
-                    seen.push((source_end+1, seed_end))
-                }
-                overlap = true
-                //print('4')
+            if (dest_start <= end and dest_start + range_len > end) {
+                end = source_start + end - dest_start;
+                break;
             }
         }
-        if !overlap {
-            new_ranges.push((seed_start, seed_end)) // all seeds mapes to itself
-            //print('6')
-        }
-        
-        //print('mapped to new ranges: ', new_ranges . sort)
     }
-    return new_ranges . sort
+    //end.print
+    return end
 }
 
-fn part_2(seed_ranges, mapping_ranges) {
-    let new_ranges = seed_ranges
-    for i in range(mapping_ranges.len) {
-        // print('new ranges: ', new_ranges)
-        new_ranges = get_new_seed_ranges(new_ranges, mapping_ranges[i])
-    }
-    return new_ranges[:50]
-}
-
-fn get_real_seeds(seeds) {
-    let real_seeds = []
-    for seed_start, seed_range in seeds.group_by(2) {
-        for i in range(seed_range) {
-            real_seeds.push(seed_start+i)
-            print('getting real seeds')
+fn check_valid_seed(seed_ranges, seed) {
+    for seed_start, seed_range in seed_ranges {
+        if seed_start <= seed and seed <= seed_start+seed_range {
+            return true
         }
     }
-    return real_seeds
+    return false
+}
+
+fn part_2(seeds, mappings) {
+    for i in range(10000000, 200000000) {
+        let seed = find_seed_from_location(i, mappings)
+        // seed.print
+        // seeds.print
+        if (check_valid_seed(seeds, seed)) {
+            return i
+        }
+        if i%100000 == 0 {
+            print(i)
+        }
+    }
+    return 'ack'
 }
 
 fn main() {
     let input = parse_input('real_input.txt')
     let (seeds), *mappings = input
 
-    // part_1(seeds, mappings) . print
+    //part_1(seeds, mappings) . print
+
+    let new_seeds = seeds.group_by(2)
+    let new_mappings = reverse(mappings)
+    part_2(new_seeds, new_mappings) . print
+
+}
+
+main()
+
+// fn get_real_seeds(seeds) {
+//     let real_seeds = []
+//     for seed_start, seed_range in seeds.group_by(2) {
+//         for i in range(seed_range) {
+//             real_seeds.push(seed_start+i)
+//         }
+//     }
+//     return real_seeds
+// }
+
+
+// fn part_2(seed_ranges, mapping_ranges) {
+//     let new_ranges = seed_ranges
+//     for i in range(mapping_ranges.len) {
+//         // print('new ranges: ', new_ranges)
+//         new_ranges = get_new_seed_ranges(new_ranges, mapping_ranges[i])
+//     }
+//     return new_ranges[:50]
+// }
 
     //part 2
     // let mapping_ranges = get_mapping_ranges(mappings)
     // let seed_ranges = get_seed_ranges(seeds)
     // let final_ranges = part_2(seed_ranges, mapping_ranges) . print
 
-    let real_seeds = get_real_seeds(seeds)
-    let real_location = part_1(real_seeds, mappings)
-    real_location . print
+    // let real_seeds = get_real_seeds(seeds)
+    // let real_location = part_1(real_seeds, mappings)
+    // real_location . print
 
 
-}
+// // part 2
+// fn get_mapping_ranges(mappings) {
+//     let mapping_ranges = list()
+//     for mapping in mappings {
+//         let ranges = list()
+//         for dest_start, source_start, range_len in mapping {
+//             ranges.push((source_start, source_start+range_len-1, dest_start, dest_start+range_len-1))
+//         }
+//         mapping_ranges.push(ranges.sort)
+//     }
+//     return mapping_ranges
+// }
 
-main()
+// fn get_seed_ranges(seeds) {
+//     let seed_ranges = list()
+//     for seed_start, seed_range in seeds.group_by(2) {
+//         let seed_range = (seed_start, seed_start+seed_range-1)
+//         seed_ranges.push(seed_range)
+//     }
+//     return seed_ranges
+// }
+
+// fn get_new_seed_ranges(seed_ranges, one_mapping_ranges) {
+//     let seen = set()
+//     let new_ranges = set()
+//     for seed_start, seed_end in seed_ranges { // check overlap for each seed
+//         let overlap = true
+//         // print('seed start and end: ', seed_start, seed_end)
+//         // print('current mapping procesdure: ', one_mapping_ranges)
+//         for source_start, source_end, dest_start, dest_end in one_mapping_ranges { // for each mapping get possible overlap
+//             //print('current mappings: ', (source_start, source_end, dest_start, dest_end))
+//             if ((seed_start > source_end) or (seed_end < source_start)) { // don't have overlap
+//                 //print('1')
+//                 overlap = false
+//                 continue
+//             }
+//             elif (seed_start > source_start or seed_start >= source_start) 
+//                     and (seed_end < source_end or seed_end <= source_end) { // all seeds in source
+//                 new_ranges.push((dest_start+(seed_start-source_start), dest_end-(source_end-seed_end)-1)) // all seeds maps to dest
+//                 overlap = true
+//                 //print('5', (dest_start+(seed_start-source_start), dest_end-(source_end-seed_end)-1))
+//                 break
+//             }
+//             elif (seed_start < source_start or seed_start <= source_start) 
+//                     and (seed_end < source_end or seed_end <= source_end) { // seeds tail overlaps source head
+//                 new_ranges.push((dest_start, dest_start+(seed_end-source_start))) // seeds tail maps to dest head
+//                 if ((seed_start, source_start-1) not in seen) {
+//                     seed_ranges.push((seed_start, source_start-1)) // seeds head maps to itself
+//                     seen.push((seed_start, source_start-1))
+//                 }
+//                 overlap = true
+//                 //print('2', (dest_start, dest_start+(seed_end-source_start)))
+//             }
+//             elif (seed_start > source_start or seed_start >= source_start) 
+//                     and (seed_end > source_end or seed_end >= source_end) { // seeds head overlaps source tail
+//                 new_ranges.push((dest_end-(source_end-seed_start), dest_end)) // seeds head maps to dest end
+//                 if ((source_end+1, seed_end) not in seen) {
+//                     seed_ranges.push((source_end+1, seed_end)) // seeds tail maps to itself
+//                     seen.push((source_end+1, seed_end))
+//                 }
+//                 overlap = true
+//                 //print('3', (dest_end-(source_end-seed_start), dest_end))
+//             }
+//             elif (seed_start < source_start or seed_start <= source_start) 
+//                     and (seed_end > source_end or seed_end >= source_end) { // seeds covers source
+//                 new_ranges.push((dest_start, dest_end)) // seeds middle maps to dest
+//                 if ((seed_start, source_start-1) not in seen) {
+//                     seed_ranges.push((seed_start, source_start-1)) // seeds head maps to itself
+//                     seen.push((seed_start, source_start-1))
+//                 }
+//                 if ((source_end+1, seed_end) not in seen) {
+//                     seed_ranges.push((source_end+1, seed_end)) // seeds tail maps to itself
+//                     seen.push((source_end+1, seed_end))
+//                 }
+//                 overlap = true
+//                 //print('4')
+//             }
+//         }
+//         if !overlap {
+//             new_ranges.push((seed_start, seed_end)) // all seeds mapes to itself
+//             //print('6')
+//         }
+        
+//         //print('mapped to new ranges: ', new_ranges . sort)
+//     }
+//     return new_ranges . sort
+// }
