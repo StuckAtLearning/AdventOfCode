@@ -1,0 +1,68 @@
+fn parse_input(input_file) -> 
+    input_file . read_text . split('\n') . map(split(' ')) 
+    . map(
+        fn((layout, groups)) -> (
+            //layout.split('\.+').filter(!=''), 
+            layout,
+            groups.split(',') . map(int)
+        )
+    )
+
+@memoize
+fn get_num_arrangements(spring, group) {
+    spring = spring . split('^\.+') . [-1] // ignore leading dots
+
+    // ['', []] is legal
+    if spring == '' {
+        return int(group == []) 
+    }
+
+    // [spring, []] is legal so long as s has no '#' (we can convert '?' to '.')
+    if group == [] {
+        return int(spring.index_of('#') == -1) 
+    }
+
+    // spring starts with '#' so remove the first spring
+    if spring[0] == '#' {
+        if len(spring) < group[0] or '.' in spring[:group[0]] {
+            return 0 // impossible - not enough space for the spring
+        }
+        elif len(spring) == group[0] {
+            return int(len(group) == 1) // single spring, right size
+        }
+        elif spring[group[0]] == '#' {
+            return 0 // springs must be separated by '.' (or '?') 
+        }
+        else {
+            return get_num_arrangements(spring[group[0]+1:], group[1:]) // one less spring
+        }
+    }
+
+    // get_num_arrangements springs if we convert the first '?' to '#' + '.'
+    return get_num_arrangements('#'+spring[1:], group) + get_num_arrangements(spring[1:], group)
+}
+
+fn part_1(input) {
+    let sum_arrangement_num = 0
+    for spring, groups in input {
+        sum_arrangement_num += get_num_arrangements(spring, groups)
+    }
+    return sum_arrangement_num
+}
+
+fn part_2(input) {
+    let folded_input = list()
+    for spring, groups in input {
+        folded_input.push(((spring+'?')*4+spring, groups*5))
+    }
+    return part_1(folded_input)
+}
+
+
+fn main() {
+    let input = parse_input('real_input.txt')
+    part_1(input) . print
+    part_2(input) . print
+}
+
+main()
