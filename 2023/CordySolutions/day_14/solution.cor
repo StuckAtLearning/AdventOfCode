@@ -1,0 +1,127 @@
+fn parse_input(input_file) {
+    let input = input_file . read_text . split('\n')
+
+    // let grid = dict()
+    // for r in range(input.len) {
+    //     for c in range(input[r].len) {
+    //         grid[(r, c)] = input[r][c]
+    //     }
+    // }
+
+    return (input, input.len, input[0].len)
+}
+
+fn tilt_board(separated, length) {
+    let tilted = []
+    for row in separated {
+        let tilted_row = list()
+        for group in row {
+            if group != '' {
+                let rock_count = group.filter(=='O').len
+                let space_count = group.filter(=='.').len
+                tilted_row.push((rock_count * 'O')+(space_count * '.'))
+            }
+            else {
+                tilted_row.push('')
+            }
+        }
+        tilted.push(tilted_row.join('#'))
+    }
+    return tilted
+}
+
+fn get_load(tilted) {
+    let load_sum = 0
+    for level_num, row in enumerate(tilted.split('\n').reverse) {
+        load_sum += (level_num+1) * (row.filter(=='O').len)
+    }
+    return load_sum
+}
+
+fn part_1(input, length) {
+    let separated = input . zip . map(join('')) . map(split('#')) // tilt north
+    // separated.print
+    let tilted_north = tilt_board(separated, length)
+    // tilted_north.print
+    return get_load(tilted_north.zip.map(fn(x) -> x.list.join('')).join('\n'))
+}
+
+// fn rotate(input) {
+//     return ["".join(input) for input in zip(*lines[::-1])]
+// }
+
+fn part_2(input, length) {
+    let tilted = input
+    let rotated = list()
+    for i in range(100000) {
+        // tilt north
+        rotated = tilted . zip . map(join('')) . map(split('#')) // rotate to operate north tilt
+        tilted = tilt_board(rotated, length) . zip . map(fn(x) -> x.join('')) // tilting
+
+        // tilt west
+        rotated = tilted . map(split('#')) // rotate to operate west tilt
+        tilted = tilt_board(rotated, length) // tilting
+
+        // tilt south
+        rotated = tilted . reverse . zip . map(join('')) . map(split('#')) // rotate to operate south tilt
+        tilted = tilt_board(rotated, length) . zip . map(fn(x) -> x . join('')) . reverse //  tilting
+
+        // tilt east
+        rotated = tilted . map(fn(x) -> x . reverse . join('') . split('#')) // rotate to operate east tilt
+        tilted = tilt_board(rotated, length) . map(fn(x) -> x . reverse . join(''))// tilting
+
+        // print('---------', i, '--------------')
+        // tilted.join('\n').print
+        if i%1000 == 0 {print(get_load(tilted.join('\n')), i)}
+    }
+    
+    return get_load(tilted.join('\n'))
+}
+
+
+fn main() {
+    let input, length, width = parse_input('real_input.txt')
+    part_1(input, length) . print
+    part_2(input, length) . print
+}
+
+main()
+
+
+
+    // let new_grid = tilt_to_north(grid)
+    // print_grid(new_grid, length).print
+
+
+// fn print_grid(grid, length) -> 
+//     grid . sort . group_by(length) 
+//         . map(fn(x) -> 
+//             x . map(fn((_, tile)) -> tile) . join('')
+//         )
+//     . join('\n')
+
+
+// fn tilt_to_north(grid) {
+//     grid = grid.sort.dict
+//     //print(grid)
+//     for coord, tile in grid {
+//         if tile == 'O' {
+//             //print('starting O position: ', coord)
+//             let tile_ahead = (coord[0]-1, coord[1])
+//             while tile_ahead[0] >= 0 {
+//                 if grid[tile_ahead] == '#' or grid[tile_ahead] == 'O'{
+//                     grid[tile_ahead + (1, 0)] = 'O' // change current tile to 'O'
+//                     grid[(coord)] = '.' // change previous tile to '.'
+//                     break
+//                 }
+//                 elif tile_ahead[0] == 0 and grid[tile_ahead] == '.' {
+//                     grid[tile_ahead + (1, 0)] = 'O'
+//                     grid[(coord)] = '.'             
+//                     break
+//                 }
+//                 tile_ahead -= (1, 0)
+//             }
+//         }
+//     }
+//     return grid
+// }
