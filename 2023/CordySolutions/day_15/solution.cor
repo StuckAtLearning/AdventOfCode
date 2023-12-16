@@ -1,0 +1,78 @@
+fn parse_input(input_file) -> input_file . read_text . split(',')
+
+fn get_hash_value(input_str) {
+    let current_value = 0
+    for i in input_str {
+        current_value += ord(i)
+        current_value *= 17
+        current_value %= 256
+    }
+    return current_value
+}
+
+fn part_1(input) {
+    let result_sum = 0
+    for i in input {
+        result_sum += get_hash_value(i)
+    }
+    return result_sum
+}
+
+// part 2
+fn do_hashmap(input) {
+    let hash_map = dict() . default(list)
+    for i in input {
+        if '-' in i {
+            let sequence = i.split('-').[0]
+            let box = get_hash_value(sequence)
+            for index, (s, _) in enumerate(hash_map[box]) {
+                if s == sequence {
+                    hash_map[box].remove(index)
+                    break
+                }
+            }
+        }
+        else {
+            let sequence, focal_length = i.split('=')
+            let box = get_hash_value(sequence)
+            let in_map_flag = false
+            for index, (s, f) in enumerate(hash_map[box]) {
+                if s == sequence {
+                    hash_map[box][index] = (sequence, focal_length)
+                    in_map_flag = true
+                    break
+                }
+            }
+            if !in_map_flag {
+                hash_map[box].push((sequence, focal_length))
+            }
+        }
+    }
+    return hash_map
+}
+
+fn get_focusing_power(hash_map) {
+    let focusing_power = 0
+    for box, lens in hash_map {
+        if lens == [] {
+            continue
+        }
+        for index, (_, focal_length) in enumerate(lens) {
+            focusing_power += (box+1) * (index+1) * (focal_length.int)
+        }
+    }
+    return focusing_power
+}
+
+fn part_2(input) {
+    let hash_map = do_hashmap(input)
+    return get_focusing_power(hash_map)   
+}
+
+fn main() {
+    let input = parse_input('real_input.txt')
+    part_1(input) . print
+    part_2(input) . print
+}
+
+main()
