@@ -1,0 +1,72 @@
+fn parse_input(input_file) -> 
+    input_file . read_text . split('\n') . enumerate 
+        . flat_map(fn((row_num, tiles)) -> tiles . enumerate 
+            . map(fn((column_num, tile)) -> 
+                ((row_num, column_num), tile.int)
+            )
+        ) 
+    . dict
+
+fn get_weight(input_coords, border, start_coord, end_coord) {
+    //let path = dict() . default()
+    let queue = heap()
+    queue.push((0, (start_coord, (0, 1))))
+    queue.push((0, (start_coord, (1, 0))))
+    let seen = set()
+    while queue {
+        let weight, (current, direction) = queue.pop
+
+        if current == end_coord {
+            return weight
+        }
+        elif (current, direction) in seen {
+            continue
+        }
+        seen.push((current, direction))
+
+        for i in range(1, 11) {
+            let next = current + (direction * i)
+            if next[0] < 0 or next[1] < 0 or next[0] > border or next[1] > border {
+                continue
+            }
+            weight += input_coords[next]
+
+            if i < 4 {
+                continue
+            }
+
+            let next_directions = [(direction[1], direction[0]), (-direction[1], -direction[0])]
+            for next_direction in next_directions {
+                
+                queue.push((weight, (next, next_direction)))
+                //path[next] = current
+            }
+        }
+    }
+    assert false : 'BFS did not reach the target'
+    //return path
+}
+
+// fn trace_path(path, border) {
+//     let trace = list()
+//     let start = (0, 0)
+//     let end = (border, border)
+//     trace.push(start)
+//     while start != end {
+//         let next = path[start]
+//         trace.push(next)
+//         print(next)
+//         start = next
+//     }
+//     return trace
+// }
+
+fn main() {
+    let input_coords = parse_input('real_input.txt')
+    let border = input_coords . keys . max . [0]
+    let weight = get_weight(input_coords, border, (0, 0), (border, border))
+    weight.print
+    //trace_path(path, border) . print
+}
+
+main()
