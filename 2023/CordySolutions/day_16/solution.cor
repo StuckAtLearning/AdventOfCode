@@ -1,0 +1,124 @@
+fn parse_input(input_file) -> 
+    input_file . read_text . split('\n') . enumerate 
+        . flat_map(fn((row_num, tiles)) -> tiles . enumerate 
+            . map(fn((column_num, tile)) -> 
+                ((row_num, column_num), tile)
+            )
+        ) 
+    . dict
+
+fn trace_beams(input_coords, border, starting_node) {
+    let energized = list()
+    let queue = [starting_node] // (current_coord, current direction)
+    let seen = set()
+    while queue {
+        let current, direction = queue.pop()
+
+        if ((current, direction)) in seen {
+            continue
+        }
+        if current[0] < 0 or current[1] < 0 or current[0] > border or current[1] > border {
+            continue
+        }
+        energized.push(current)
+        seen.push((current, direction))
+
+        let next_direction = vector()
+        let current_tile = input_coords[current]
+        if current_tile == '.' {
+            next_direction = direction
+        }
+        elif current_tile == '/' {
+            if direction[0] == 0 { // (0, 1) and (0, -1)
+                next_direction = (-direction[1], direction[0])
+            }
+            elif direction[1] == 0 { // (1, 0) and (-1, 0)
+                next_direction = (direction[1], -direction[0])
+            }
+        }
+        elif current_tile == '\\' {
+            if direction[0] == 0 { // (0, 1) and (0, -1)
+                next_direction = (direction[1], direction[0])
+            }
+            elif direction[1] == 0 { // (1, 0) and (-1, 0)
+                next_direction = (direction[1], direction[0])
+            }
+        }
+        elif current_tile == '-' {
+            if direction[0] == 0 { // (0, 1) and (0, -1)
+                next_direction = direction
+            }
+            elif direction[1] == 0 { // (1, 0) and (-1, 0)
+                queue.push((current+(0, 1), (0, 1)))
+                queue.push((current+(0, -1), (0, -1)))
+                continue
+            }
+        }
+        elif current_tile == '|' {
+            if direction[1] == 0 { // (1, 0) and (-1, 0)
+                next_direction = direction
+            }
+            elif direction[0] == 0 { // (0, 1) and (0, -1)
+                queue.push((current+(1, 0), (1, 0)))
+                queue.push((current+(-1, 0), (-1, 0)))
+                continue
+            }
+        }
+        queue.push((current+next_direction, next_direction))
+    }
+    // energized.print
+    return energized . set . len
+}
+
+fn part_1(input_coords, border) -> trace_beams(input_coords, border, ((0, 0), (0, 1)))
+
+fn part_2(input_coords, border) {
+    let border = input_coords . keys . max . [0]
+    let all_starting_tiles = list()
+    for i in range(border) {
+        all_starting_tiles.push(((0, i), (1, 0))) // top row going down
+        all_starting_tiles.push(((border, i), (-1, 0))) // bottomw row going up
+        all_starting_tiles.push(((i, 0), (0, 1))) // left column going right
+        all_starting_tiles.push(((i, border), (0, -1))) // right column going left
+    }
+
+    let max_energized_len = 0
+    for start in all_starting_tiles {
+        max_energized_len max= trace_beams(input_coords, border, start)
+    }
+    return max_energized_len
+}
+
+fn main() {
+    let input_coords = parse_input('real_input.txt')
+    let border = input_coords . keys . max . [0]
+    part_1(input_coords, border) . print
+    part_2(input_coords, border) . print
+}
+
+main()
+
+// fn trace_beams(current_coord, current_direction, input_coords, length, width) {
+//     if (current_coord[0] == 0) or (current_coord[1] == 0) or (current_coord == length) or (current_coord == width) {
+//         return [current_coord]
+//     }
+//     if input_coords[current_coord] == '/' {
+//         if current_direction[0] == 0 { // (0, 1) and (0, -1)
+//             current_direction = (-current_direction[1], current_direction[0])
+//         }
+//         elif current_direction[1] == 0 { // (1, 0) and (-1, 0)
+//             current_direction = (current_direction[1], -current_direction[0])
+//         }
+//     }
+//     elif input_coords[current_coord] == '\\' {
+//         if current_direction[0] == 0 { // (0, 1) and (0, -1)
+//             current_direction = (current_direction[1], current_direction[0])
+//         }
+//         elif current_direction[1] == 0 { // (1, 0) and (-1, 0)
+//             current_direction = (current_direction[1], current_direction[0])
+//         }
+//     }
+//     elif input_coords[current_coord] == '|' {
+//         if 
+//     }
+// }
