@@ -1,0 +1,19 @@
+fn parse_input(input_file) -> 
+    input_file . read_text . split('\n') . map(split(' ')) 
+    . map(fn((x, y, z)) -> (
+        if x == 'R' then (0, 1) else if x == 'L' then (0, -1) else if x == 'D' then (1, 0) else (-1, 0), 
+        y.int, 
+        z.replace('\(|\)', '')
+        )
+    ) 
+
+fn get_orientation(input) {
+    
+}
+
+fn main() {
+    let input = parse_input('test_input.txt')
+    input.print
+}
+
+main()
