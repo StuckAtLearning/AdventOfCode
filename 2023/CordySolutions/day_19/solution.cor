@@ -1,0 +1,184 @@
+fn parse_input(input_file) { 
+    let workflows, ratings = input_file . read_text . split('\n\n')
+    
+    workflows = workflows . split('\n') . map(replace('}', '')) . map(split('{')) . map(vector)
+         . map(fn((key, value)) -> (
+            key, value
+            // value . split(',') . map(
+            //     fn(x) -> x . split(':') . vector
+            // )
+        )) . dict
+    
+    ratings = ratings . split('\n') . map(replace('\{|\}', '')) 
+        . map(split(','))
+        . map(fn(x) -> x . map(split('=')) . map(fn((a, b)) -> (a, b.int)) . map(vector))
+        . map(fn(x) -> x . dict)
+    
+    return (workflows, ratings)
+}
+
+fn check_acceptance(work_name, rating, workflows) {
+    let work = workflows[work_name]
+    for i in work.split(',') {
+        if i == 'R' {
+            return false
+        }
+        elif i == 'A' {
+            return true
+        }
+        elif ':' not in i {
+            return check_acceptance(i, rating, workflows)
+        }
+
+        let condition, next = i.split(':')
+        if eval(rating[condition[0]] + condition[1:]) {
+            if next == 'R' {
+                return false
+            }
+            elif next == 'A' {
+                return true
+            }
+            return check_acceptance(next, rating, workflows)
+        }
+    }
+}
+
+fn part_1(workflows, ratings) {
+    let acceptance_sum = 0
+    for rating in ratings {
+        if check_acceptance('in', rating, workflows) {
+            acceptance_sum += rating.values.sum
+        }
+    }
+    return acceptance_sum
+}
+
+// part 2:
+// fn split_conditioned_ranges(a_range, condition) { // return (passed and failed)
+//     let split_num = condition[2:] . int
+//     let l, h = a_range
+//     if l < split_num and split_num < h {
+//         if condition[1] == '<' {
+//             return ((l, split_num-1), (split_num, h))
+//         }
+//         else {
+//             return ((split_num+1, h), (l, split_num))
+//         }
+//     }
+//     return false
+// }
+
+// fn get_accepted_ranges(work_name, parts_and_ranges, workflows) {
+//     let work = workflows[work_name]
+//     for i in work.split(',') {
+//         if i == 'R' {
+//             parts_and_ranges[work_name] = (1, 1)
+//             return parts_and_ranges
+//         }
+//         elif i == 'A' {
+//             return parts_and_ranges
+//         }
+//         elif ':' not in i {
+//             return get_accepted_ranges(i, parts_and_ranges, workflows)
+//         }
+
+//         let condition, next = i.split(':')
+//         for each_partand_range in parts_and_ranges {
+//             let name, its_range = each_partand_range
+//             if name == condition[0] {
+//                 let new_ranges = split_conditioned_ranges(its_range, condition)
+//                 if new_ranges {
+//                     if next == 'A' {
+//                         return parts_and_ranges
+//                     }
+//                     elif next == 'R' {
+//                         parts_and_ranges[name] = (1, 1)
+//                         return parts_and_ranges
+//                     }
+
+//                     parts_and_ranges[name] = new_ranges[0] // passed
+//                     get_accepted_ranges(next, parts_and_ranges, workflows)
+
+//                     parts_and_ranges[name] = new_ranges[1] // failed
+//                     get_accepted_ranges(next, parts_and_ranges, workflows)
+//                 }
+//             }
+//         }
+//     }
+// }
+
+// fn part_2(workflows) {
+//     let parts_and_ranges = {'x': (1, 4000), 'm': (1, 4000), 'a': (1, 4000), 's': (1, 4000)}
+//     return get_accepted_ranges('in', parts_and_ranges, workflows)
+// }
+
+fn both(ch, gt, val, ranges) {
+    let ch = 'xmas'.index_of(ch)
+    let ranges2 = []
+    for rng in ranges {
+        rng = list(rng)
+        let l, h = rng[ch]
+        if gt {
+            l = max(l, val+1)
+        }
+        else {
+            h = min(h, val-1)
+        }
+
+        if l > h {
+            continue
+        }
+        rng[ch] = (l, h)
+        ranges2.push(rng.vector)
+    }
+    return ranges2
+}
+
+fn acceptance_ranges_outer(workflows, work) {
+    //work . print
+    return acceptance_ranges_inner(workflows, workflows[work].split(','))
+}
+
+fn acceptance_ranges_inner(workflows, w) {
+    //print(w)
+    let it = w[0]
+    if it == 'R' {
+        return []
+    }
+    if it == 'A' {
+        return [((1,4000), (1,4000), (1,4000), (1,4000))]
+    }
+    if ':' not in it {
+        return acceptance_ranges_outer(workflows, it)
+    }
+
+    let condition = it.split(':').[0]
+    let gt = '>' in condition
+    let ch = condition[0]
+    let val = condition[2:].int
+    let val_alt = if gt then val+1 else val-1
+
+    return both(ch, gt, val, acceptance_ranges_inner(workflows, [it.split(":").[1]])) + 
+        both(ch, !(gt), val_alt, acceptance_ranges_inner(workflows, w[1:]))
+}
+
+fn part_2(workflows) {
+    let sum_total = 0
+    for rng in acceptance_ranges_outer(workflows, 'in') {
+        //rng.print
+        let v = 1
+        for l, h in rng {
+            v *= (h - l + 1)
+        }
+        sum_total += v
+    }
+    return sum_total
+}
+
+fn main() {
+    let workflows, ratings = parse_input('real_input.txt')
+    part_1(workflows, ratings) . print
+    part_2(workflows) . print
+}
+
+main()
