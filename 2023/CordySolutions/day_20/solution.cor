@@ -1,0 +1,97 @@
+fn parse_input(input_file) -> input_file . read_text . split('\n') 
+    . map(split(' -> ')) . map(fn((a, b)) -> (a, b . split(', '))) . dict
+
+fn have_input_type_and_memory(input) {
+    let new_input = dict()
+    for key, value in input {
+        if key == 'broadcaster' {
+            new_input[key] = value
+        }
+
+        if key[0] == '%' {
+            new_input[key[1:]] = (value, [false]) // false is off, true is on
+        }
+        elif key[0] == '&' {
+            let multi_inputs = dict()
+            for name, output in input {
+                if key[1:] in output {
+                    multi_inputs[name[1:]] = -1 // default low
+                }
+            }
+            new_input[key[1:]] = (value, multi_inputs)
+        }
+    }
+
+    return new_input
+}
+
+fn count_signals(new_input) {
+    let high_signal_count = 0
+    let low_signal_count = 0
+    
+    for i in range(1000) {
+        // test_input only: let queue = [('broadcaster', 'a', -1)] 
+        let queue = list()
+        for i in ['cx', 'zq', 'tv', 'rh'] {
+            queue.push(('broadcaster', i, -1)) // low is -1, high is 1
+        }
+        low_signal_count += 5
+        while queue {
+            let sender, current_module, current_signal = queue.pop_front()
+            if current_module not in new_input {
+                continue
+            }
+
+            let next_module, next_memory = new_input[current_module]
+            if next_memory is list { // is flip flop
+                if current_signal == -1 { // get low
+                    for each_module in next_module {
+                        if true in next_memory { // was on
+                            queue.push((current_module, each_module, -1)) // send low
+                            low_signal_count += 1
+                            new_input[current_module][1] = [false] // switch (off now)
+                        }
+                        else { // was off
+                            queue.push((current_module, each_module, 1)) // send high
+                            high_signal_count += 1
+                            new_input[current_module][1] = [true] // switch (on now)
+                        }
+                    }
+                }
+            }
+            else { // is conjunction
+                new_input[current_module][1][sender] = current_signal
+                if new_input[current_module][1].values.all(>0) {
+                    for each_module in next_module {
+                        queue.push((current_module, each_module, -1))
+                        low_signal_count += 1
+                    }
+                }
+                else {
+                    for each_module in next_module {
+                        queue.push((current_module, each_module, 1))
+                        high_signal_count += 1
+                    }
+                }
+            }
+        }
+    }
+
+    return low_signal_count * high_signal_count
+}
+
+fn part_1(input) {
+    let new_input = have_input_type_and_memory(input)
+    return count_signals(new_input)
+}
+
+fn part_2() -> lcm([3821, 3923, 4019, 3919])
+
+
+fn main() {
+    let input = parse_input('real_input.txt')
+    part_1(input) . print
+    part_2() . print
+}
+
+main()
