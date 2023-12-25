@@ -1,0 +1,71 @@
+fn parse_input(input_file) {
+    let input = input_file . read_text . split('\n')
+    let coords = dict() 
+
+    for r in range(input.len) {
+        for c in range(input[r].len) {
+            coords[(r, c)] = input[r][c]
+        }
+    }
+    return (coords, input.len)
+}
+
+fn get_starting_position(coords) {
+    for key, value in coords {
+        if value == 'S' {
+            return key
+        }
+    }
+}
+
+fn get_neighbours(current_coord, dimension) {
+    let neighbours = list()
+    if current_coord[0]-1 >= 0 {
+        neighbours.push(current_coord - (1, 0))
+    }
+    if current_coord[1]-1 >= 0 {
+        neighbours.push(current_coord - (0, 1))
+    }
+    if current_coord[0]+1 < dimension {
+        neighbours.push(current_coord + (1, 0))
+    }
+    if current_coord[1]+1 < dimension {
+        neighbours.push(current_coord + (0, 1))
+    }
+    return neighbours
+}
+
+fn is_plot(current_coord, coords) -> (coords[current_coord] == '.') or (coords[current_coord] == 'S')
+
+fn walk_steps(coords, start, dimension) {
+    let next_steps = [start]
+    let new_steps = set()
+    for i in range(20) { // do 6 steps 
+        while next_steps {
+            let current_coord = next_steps.pop_front()
+            let neighbours = get_neighbours(current_coord, dimension)
+            for neighbour in neighbours {
+                if is_plot(neighbour, coords) {
+                    new_steps.push(neighbour)
+                }
+            }
+        }
+        next_steps = new_steps.list
+        new_steps = set()
+
+        print('after ', i+1, 'steps: ', next_steps.len)
+    }
+    return next_steps
+}
+
+fn part_1(coords, dimension) {
+    let start = get_starting_position(coords)
+    return walk_steps(coords, start, dimension) . len
+}
+
+fn main() {
+    let coords, dimension = parse_input('test_input.txt')
+    part_1(coords, dimension) . print
+}
+
+main()
