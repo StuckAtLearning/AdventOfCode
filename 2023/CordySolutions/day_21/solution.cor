@@ -20,27 +20,35 @@ fn get_starting_position(coords) {
 
 fn get_neighbours(current_coord, dimension) {
     let neighbours = list()
-    if current_coord[0]-1 >= 0 {
-        neighbours.push(current_coord - (1, 0))
-    }
-    if current_coord[1]-1 >= 0 {
-        neighbours.push(current_coord - (0, 1))
-    }
-    if current_coord[0]+1 < dimension {
-        neighbours.push(current_coord + (1, 0))
-    }
-    if current_coord[1]+1 < dimension {
-        neighbours.push(current_coord + (0, 1))
-    }
-    return neighbours
+    // part 1
+    // if current_coord[0]-1 >= 0 {
+    //     neighbours.push(current_coord - (1, 0))
+    // }
+    // if current_coord[1]-1 >= 0 {
+    //     neighbours.push(current_coord - (0, 1))
+    // }
+    // if current_coord[0]+1 < dimension {
+    //     neighbours.push(current_coord + (1, 0))
+    // }
+    // if current_coord[1]+1 < dimension {
+    //     neighbours.push(current_coord + (0, 1))
+    // }
+    // return neighbours
+
+    // part 2
+    return [current_coord+(1, 0), current_coord+(0, 1), current_coord-(1, 0), current_coord-(0, 1)]
 }
 
-fn is_plot(current_coord, coords) -> (coords[current_coord] == '.') or (coords[current_coord] == 'S')
+fn is_plot(current_coord, coords) -> 
+    // for part 1
+    // (coords[current_coord] != '#')
+    // for part 2
+    coords[(current_coord[0] % 131, current_coord[1] % 131)] != '#'
 
-fn walk_steps(coords, start, dimension) {
+fn walk_steps(coords, start, dimension, max_step_num) {
     let next_steps = [start]
     let new_steps = set()
-    for i in range(20) { // do 6 steps 
+    for i in range(max_step_num) {
         while next_steps {
             let current_coord = next_steps.pop_front()
             let neighbours = get_neighbours(current_coord, dimension)
@@ -53,19 +61,43 @@ fn walk_steps(coords, start, dimension) {
         next_steps = new_steps.list
         new_steps = set()
 
-        print('after ', i+1, 'steps: ', next_steps.len)
+        //print('after ', i+1, 'steps: ', next_steps.len)
     }
     return next_steps
 }
 
-fn part_1(coords, dimension) {
-    let start = get_starting_position(coords)
-    return walk_steps(coords, start, dimension) . len
+fn part_1(coords, dimension, start) -> walk_steps(coords, start, dimension, 64) . len
+
+fn quadratic_formula(y1, y2, y3) {
+    let a = (y3 - (2 * y2) + y1) / 2
+    let b = y2 - y1 - a
+    let c = y1
+    
+    print('cordy', a, b, c)
+    // a = 14980
+    // b = -75139
+    // c = 94135
+
+    // 26501365 = 202300 * 131 + 65
+    return (a * (202300*20300)) + (b * 202300) + c
+}
+
+fn part_2(coords, dimension, start) {
+    // let y1 = walk_steps(coords, start, dimension, 65) . len
+    // let y2 = walk_steps(coords, start, dimension, 65 + 131) . len
+    // let y3 = walk_steps(coords, start, dimension, 65 + (131*2)) . len
+    let y1 = 3787
+    let y2 = 33976
+    let y3 = 94315
+    //print(y1, y2, y3)
+    return quadratic_formula(y1, y2, y3)
 }
 
 fn main() {
-    let coords, dimension = parse_input('test_input.txt')
-    part_1(coords, dimension) . print
+    let coords, dimension = parse_input('real_input.txt')
+    let start = get_starting_position(coords)
+    //part_1(coords, dimension, start) . print
+    part_2(coords, dimension, start) . print
 }
 
 main()
