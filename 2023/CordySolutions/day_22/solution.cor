@@ -1,0 +1,72 @@
+fn parse_input(input_file) -> input_file . read_text . split('\n') . map(split('~'))
+    . map(fn((a, b)) -> (a.split(',').map(int).vector, b.split(',').map(int).vector))
+    . sort_by(fn(((_, _, a), _)) -> a)
+
+
+fn get_connected_cubes(brick_snapshot) {
+    let (start_x, start_y, _), (end_x, end_y, _)  = brick_snapshot
+    let connected_cubes = list()
+    for x in range(start_x, end_x+1) {
+        for y in range(start_y, end_y+1) {
+            connected_cubes.push((x, y))
+        }
+    }
+    return connected_cubes
+}
+
+
+fn get_dropped_distance(z_map, brick_snapshot) {
+    let heights = list()
+    for cube in get_connected_cubes(brick_snapshot) {
+        heights.push(z_map[cube])
+    }
+    let max_height = heights . max
+    return max(0, brick_snapshot[0][2] - max_height - 1)
+}
+
+
+fn get_new_brick_position(brick_snapshot, dropped_distance) -> 
+    (
+        (brick_snapshot[0][0], brick_snapshot[0][1], brick_snapshot[0][2] - dropped_distance), 
+        (brick_snapshot[1][0], brick_snapshot[1][1], brick_snapshot[1][2] - dropped_distance)
+    )
+
+
+fn get_dropped_bricks(bricks) {
+    let z_map = dict() . default(0)
+    let dropped_bricks = list()
+    for brick_snapshot in bricks {
+        let dropped_distance = get_dropped_distance(z_map, brick_snapshot)
+        let new_brick_position = get_new_brick_position(brick_snapshot, dropped_distance)
+        dropped_bricks.push(new_brick_position)
+
+        let (start_x, start_y, _), (end_x, end_y, _)  = new_brick_position
+        for x in range(start_x, end_x+1) {
+            for y in range(start_y, end_y+1) {
+                z_map[(x,y)] = new_brick_position[1][2]
+            }
+        }
+    }
+    return dropped_bricks
+}
+
+
+fn part_1(input) {
+    let stable_count = 1
+    let with_current_brick = get_dropped_bricks(input)[-1][-1][-1]
+    for i in range(len(input)-2) {
+        let without_current_brick = get_dropped_bricks((input[:i] + input[i+1:]))[-1][-1][-1]
+        if with_current_brick == without_current_brick {
+            stable_count += 1
+        }
+    }
+    return stable_count
+}
+
+
+fn main() {
+    let input = parse_input('real_input.txt')
+    part_1(input) . print
+}
+
+main()
