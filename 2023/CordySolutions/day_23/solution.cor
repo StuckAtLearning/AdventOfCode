@@ -1,0 +1,134 @@
+fn parse_input(input_file) {
+    let input = input_file . read_text . split('\n')
+    let grid = dict()
+    for r in range(input.len) {
+        for c in range(input[r].len) {
+            if input[r][c] != '#' {
+                grid[(r, c)] = input[r][c]
+            }
+        }
+    }
+    return (grid, grid.max.[0])
+}
+
+
+fn get_neighbours((current_x, current_y)) {
+    return [
+        (current_x, current_y + 1),
+        (current_x, current_y - 1),
+        (current_x + 1, current_y),
+        (current_x - 1, current_y)
+    ]
+}
+
+fn check_intersection(current, grid) -> get_neighbours(current) . map(fn(x) -> x in grid and grid[x]) . all(!='.')
+
+fn get_intersections(grid) -> grid . filter(fn((coord, _)) -> check_intersection(coord, grid)) . map(fn((x, _)) -> x)
+
+fn get_route_sections(grid, end, intersections) {
+    let route_sections = dict() . default(dict)
+    let queue = [((0, 1), (0, 1), 0)]
+    while queue {
+        let start, current, step_count = queue.pop
+        if current in intersections {
+            if current != start {
+                route_sections[start][current] = step_count
+            }
+            start = current
+            step_count = 0
+        }
+        else {
+            grid.remove(current)
+        }
+        
+        for next in get_neighbours(current) {
+            if next in grid {
+                if next < current and grid[next] != '.'{
+                    continue
+                }
+                queue.push((start, next, step_count + 1))
+            }
+        }
+    }
+    return route_sections
+}
+
+
+fn get_distances(route_sections, end) {
+    let queue = [((0, 1), 0)]
+    let distances = list()
+    while queue {
+        let current, step_count = queue.pop
+        if current == end {
+            distances.push(step_count)
+        }
+        let destinations = route_sections[current]
+        for destination, its_count in destinations {
+            queue.push((destination, step_count+its_count))
+        }
+    }
+    return distances
+}
+
+
+fn part_1(intersections, route_sections, end) {
+    let distances = get_distances(route_sections, end)
+    return distances . max
+}
+
+
+fn add_opposite_routes(route_sections) {
+    let new_route_sections = dict() . default(dict)
+    for start, destinations in route_sections {
+        for destination, its_count in destinations {
+            new_route_sections[start][destination] = its_count
+            new_route_sections[destination][start] = its_count
+        }
+    }
+    return new_route_sections
+}
+
+
+fn get_unslopped_distances(route_sections, end) {
+    let queue = [((0, 1), 0, set())] // current, step_count, previous_steps
+    let distances = list()
+    while queue {
+        let current, step_count, previous_steps = queue.pop
+        // print(step_count)
+        // print(current, step_count, previous_steps)
+        if current == end {
+            distances.push(step_count)
+        }
+
+        let destinations = route_sections[current]
+        for destination, its_count in destinations {
+            //print(current, destination)
+            if destination not in previous_steps {
+                let steps = previous_steps . set
+                queue.push((destination, step_count+its_count, steps.push(current)))
+            }
+        }
+    }
+    return distances
+}
+
+
+fn part_2(intersections, route_sections, end) {
+    let new_routes = add_opposite_routes(route_sections)
+    // print(new_routes)
+    let distances = get_unslopped_distances(new_routes, end)
+    // print(distances)
+    return distances . max
+}
+
+
+fn main() {
+    let grid, end = parse_input('real_input.txt')
+    let intersections = get_intersections(grid).push(end)
+    let route_sections = get_route_sections(grid, end, intersections)
+    part_1(intersections, route_sections, end) . print
+    part_2(intersections, route_sections, end) . print
+}
+
+main()
+
