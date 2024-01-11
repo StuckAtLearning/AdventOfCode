@@ -94,15 +94,12 @@ fn get_unslopped_distances(route_sections, end) {
     let distances = list()
     while queue {
         let current, step_count, previous_steps = queue.pop
-        // print(step_count)
-        // print(current, step_count, previous_steps)
         if current == end {
             distances.push(step_count)
         }
 
         let destinations = route_sections[current]
         for destination, its_count in destinations {
-            //print(current, destination)
             if destination not in previous_steps {
                 let steps = previous_steps . set
                 queue.push((destination, step_count+its_count, steps.push(current)))
@@ -115,9 +112,7 @@ fn get_unslopped_distances(route_sections, end) {
 
 fn part_2(intersections, route_sections, end) {
     let new_routes = add_opposite_routes(route_sections)
-    // print(new_routes)
     let distances = get_unslopped_distances(new_routes, end)
-    // print(distances)
     return distances . max
 }
 
