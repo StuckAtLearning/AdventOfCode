@@ -1,0 +1,48 @@
+fn parse_input(input_file) -> input_file 
+    . read_text . split('\n') . map(split(': '))
+    . map(fn((a, b)) -> (a, b.split(' ')))
+    . dict
+
+
+fn add_reverse_mapping(input) {
+    let all_mappings = dict() . default(set)
+    for key, value in input {
+        for i in value {
+            all_mappings[key].push(i)
+            all_mappings[i].push(key)
+        }
+    }
+    return all_mappings
+}
+
+
+// I want to do something like BFS for longest path from one node to another, so the most frequently visited ones are the bridges to cut
+// but I'm lazy I guess
+
+// fn get_count
+
+fn online_solution_yet_again(all_mappings) {
+    let G = all_mappings
+    let S = set(all_mappings.keys)
+    let count = fn(v) -> len(G[v]-S)
+    while sum(S.map(count)) != 3 {
+        let lengths = dict()
+        for i in S {
+            lengths[i] = i.count
+        }
+        S.remove(lengths.max_by(fn((_, b)) -> b).[0])
+    }
+    print(len(S) * (len(set(G.keys)-S)))
+}
+
+
+
+
+
+fn main() {
+    let input = parse_input('real_input.txt')
+    let all_mappings = add_reverse_mapping(input)
+    online_solution_yet_again(all_mappings)
+}
+
+main()
